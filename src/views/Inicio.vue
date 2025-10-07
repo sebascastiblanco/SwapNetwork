@@ -5,36 +5,54 @@
         <ion-title>Inicio sesion usuarios SwapNetwork</ion-title>
       </ion-toolbar>
     </ion-header>
+
+
     <ion-content class="ion-padding">
-      <b>Inicia sesion para ver el contenido principal de SwapNetwork</b>
-            <div> 
-            <ion-item>
+      <b>Inicia sesion para ver el contenido principal de SwapNetwork</b>    
+
+
+      <div> 
+          <ion-list>  
+
+
+                <!-- Correo -->
                 <ion-item>
-                <ion-input type="text" id="correo" v-model="correo" placeholder="Ingrese correo electronico" required/>
+                   <ion-input type="text" id="correo" v-model="correo" placeholder="Ingrese correo electronico" required/>
                 </ion-item>
+
+                <!-- Contraseña -->
                 <ion-item>
-                <ion-input :type="showPassword ? 'text' : 'password'" id="contrasena" v-model="contrasena" placeholder="Ingrese contraseña" required/>
+                    <ion-input :type="showPassword ? 'text' : 'password'" id="contrasena" v-model="contrasena" placeholder="Ingrese contraseña" required/>
                 <ion-button id="button" fill="clear" slot="end" @click="alternar" type="button">
                     <ion-icon :icon="showPassword ? eyeOff : eye"></ion-icon>
                 </ion-button>
                 </ion-item>
+
+                <!-- Inicio Sesion -->
                 <ion-item>
                     <ion-button expand="full" @click="iniciar_sesion">Iniciar Sesion</ion-button>
                 </ion-item>
-            </ion-item>
-            </div>
-        <ion-item>
-        <p>No tienes cuenta?</p>
-        <router-link to="/login" style="color: green; cursor: pointer;">
+
+
+          </ion-list> 
+      </div>
+
+
+        <!-- Hipervinculo -->
+        <ion-text>
+            <p>No tienes cuenta? </p>
+          <router-link to="/login" style="color: green; cursor: pointer;">
             Crear cuenta
-        </router-link>
-        </ion-item>
+          </router-link>
+        </ion-text>
+
+
     </ion-content>
   </ion-page>
 </template>
 
 <script setup>
-import {IonPage, IonTitle, IonContent, IonToolbar, IonHeader, IonItem, IonInput, IonButton, IonIcon} from '@ionic/vue';
+import {IonPage, IonTitle, IonContent, IonToolbar, IonHeader, IonItem, IonInput, IonButton, IonIcon, IonList, IonText} from '@ionic/vue';
 import { useRouter } from 'vue-router';
 import { ref } from 'vue'
 import { eye, eyeOff } from 'ionicons/icons'
