@@ -8,6 +8,7 @@
 
 
   <ion-content id="registro">
+    <img id="imagen" src="C:\Users\USUARIO\SwapNetwork\public\universidad_imagen.jpg"></img>
 
       <div id="formulario">
         <ion-list>
@@ -116,7 +117,16 @@ function registro() {
 
 <style>
 
+#imagen {
+  z-index: -1;                            /*permite poner la imagen de fondo*/
+  position: absolute;                     /*permite el posicionamiento de la imagen*/
+  width: auto;                            /*ancho de la imagen automatico*/
+  height: 94vh;                           /*ajusta la imagen al alto de la pantalla*/
+  padding-right: 40%;                     /*permite que la imagen se encuentre en el lado derecho*/
+}
+
 #registro {
+
   --background: linear-gradient(90deg, #7cc383, #3ad649);     /*color fondo todo el contenido*/
   text-align: center;     /*centra el texto del contenido*/
   font-family:'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;       /*tipo de letra para el contenido*/
@@ -133,6 +143,7 @@ function registro() {
   --ion-background-color: white;     /*sobreescribir color de ionic*/
   text-align: center;         /*centra el contenido del formulario*/
   margin: 10% auto;           /*centra el formulario*/
+  margin-left: 10%;           /*permite ajustar centrada mente la imagen*/
   height: auto;               /*altura del formulario*/
   width: 30%;                 /*ancho de formulario en pantalla*/
   border: 1px solid #4caf50;     /*visualizacion del borde*/
@@ -172,6 +183,7 @@ ion-item {
 }
 
 .link {
+  --background: white;
   text-align: center;         /*centra el contenido del formulario*/
   justify-content: center;          /*centra horizontalmente el contenido*/
   margin-left: 25%;         /*espacio izquierdo con el otro elemento*/

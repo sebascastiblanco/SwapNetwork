@@ -7,45 +7,44 @@
     </ion-header>
 
 
-    <ion-content class="ion-padding">
-      <b>Inicia sesion para ver el contenido principal de SwapNetwork</b>    
+    <ion-content id="inicio">
+      <img id="imagen" src="C:\Users\USUARIO\SwapNetwork\public\universidad_imagen.jpg"></img>
 
-
-      <div> 
+      <div id="formulario_inicio"> 
           <ion-list>  
 
+                <h1 id="subtitulo_inicio">Inicia sesion para ver el contenido principal de SwapNetwork</h1>   
 
                 <!-- Correo -->
                 <ion-item>
-                   <ion-input type="text" id="correo" v-model="correo" placeholder="Ingrese correo electronico" required/>
+                   <ion-input class="campo" type="text" id="correo" v-model="correo" placeholder="Ingrese correo electronico" required/>
                 </ion-item>
 
                 <!-- Contraseña -->
                 <ion-item>
-                    <ion-input :type="showPassword ? 'text' : 'password'" id="contrasena" v-model="contrasena" placeholder="Ingrese contraseña" required/>
-                <ion-button id="button" fill="clear" slot="end" @click="alternar" type="button">
+                    <ion-input class="campo" :type="showPassword ? 'text' : 'password'" id="contrasena" v-model="contrasena" placeholder="Ingrese contraseña" required/>
+                <ion-button id="boton1" fill="clear" slot="end" @click="alternar" type="button">
                     <ion-icon :icon="showPassword ? eyeOff : eye"></ion-icon>
                 </ion-button>
                 </ion-item>
 
                 <!-- Inicio Sesion -->
                 <ion-item>
-                    <ion-button expand="full" @click="iniciar_sesion">Iniciar Sesion</ion-button>
+                    <ion-button id="boton" expand="full" @click="iniciar_sesion">Iniciar Sesion</ion-button>
                 </ion-item>
 
 
-          </ion-list> 
-      </div>
-
-
         <!-- Hipervinculo -->
-        <ion-text>
-            <p>No tienes cuenta? </p>
-          <router-link to="/login" style="color: green; cursor: pointer;">
-            Crear cuenta
-          </router-link>
-        </ion-text>
+        <ion-item class="enlace">
+            <ion-text>No tienes cuenta?</ion-text>
+            <router-link id="ruta" to="/login" style="color: green; cursor: pointer;">
+              Crear cuenta
+            </router-link>
+        </ion-item>
 
+        </ion-list> 
+
+      </div>
 
     </ion-content>
   </ion-page>
@@ -89,3 +88,51 @@ import { signInWithEmailAndPassword } from 'firebase/auth';
      router.push('/login');
     }
 </script>
+
+<style>
+
+#inicio {
+  --background: linear-gradient(90deg, #7cc383, #3ad649);           /*color del fondo*/
+  justify-content: center;              /*centrado horizontalmente */
+  align-items: center;                  /*centrado verticalmente */
+  font-family:'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;        /*tipo de letra contenido*/
+  text-align: center;                   /*centrado de texto*/
+  height: 100vh;                        /*altura exacta de la pantalla*/
+}
+
+#formulario_inicio {
+  --ion-background-color: white;                /*remplaza el color por defecto de ionic*/
+  width: 30%;                                     /*ancho del formulario*/
+  height: auto;                                   /*alto del formulario*/
+  margin: 10% auto;                               /*margen del formulario*/
+  margin-right: 60%;                              /*permite ajustar centrada mente la imagen*/
+  border-radius: 25px;                            /*borde redondeado*/
+  box-shadow: 0 4px 15px rgb(0, 0, 0, 0.3);     /*sombra del formulario*/
+  overflow: hidden;                               /*recorta borde sobresaliente*/
+}
+
+#subtitulo_inicio {
+  padding: 10px 0 20px;           /*espacio del elemento*/
+}
+
+#boton {
+  --background: #7cc383;        /*color del boton*/
+  color: black;                 /*color de letra*/
+  width: 25%;                     /*ancho del boton*/
+  height: 60%;                    /*altura del boton*/
+  margin-left: 37%;               /*margen del boton*/
+  margin-top: 30px;               /*margen superior del boton*/
+  position: relative;             /*posision boton*/
+  border-radius: 10px;            /*borde redondeado*/ 
+  overflow: hidden;               /*recorta el borde sobresaliente*/
+  font-family:'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;          /*tipo de letra para el contenido*/
+}
+
+.enlace {
+  text-align: center;         /*centra el contenido del formulario*/
+  justify-content: center;          /*centra horizontalmente el contenido*/
+  margin-left: 25%;         /*espacio izquierdo con el otro elemento*/
+  padding-top: 10px;          /*espacio superior del elemento*/
+}
+
+</style>
