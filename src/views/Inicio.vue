@@ -8,7 +8,7 @@
 
 
     <ion-content id="inicio">
-      <img id="imagen" src="C:\Users\USUARIO\SwapNetwork\public\universidad_imagen.jpg"></img>
+      <img id="imagen" src="\universidad_imagen.jpg"></img>
 
       <div id="formulario_inicio"> 
           <ion-list>  

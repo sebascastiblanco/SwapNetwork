@@ -8,7 +8,7 @@
 
 
   <ion-content id="registro">
-    <img id="imagen" src="C:\Users\USUARIO\SwapNetwork\public\universidad_imagen.jpg"></img>
+    <img id="imagen" src="/universidad_imagen.jpg"></img>
 
       <div id="formulario">
         <ion-list>
@@ -121,7 +121,7 @@ function registro() {
   z-index: -1;                            /*permite poner la imagen de fondo*/
   position: absolute;                     /*permite el posicionamiento de la imagen*/
   width: auto;                            /*ancho de la imagen automatico*/
-  height: 94vh;                           /*ajusta la imagen al alto de la pantalla*/
+  height: 100%;                           /*ajusta la imagen al alto de la pantalla*/
   padding-right: 40%;                     /*permite que la imagen se encuentre en el lado derecho*/
 }
 
@@ -142,7 +142,7 @@ function registro() {
 #formulario {
   --ion-background-color: white;     /*sobreescribir color de ionic*/
   text-align: center;         /*centra el contenido del formulario*/
-  margin: 10% auto;           /*centra el formulario*/
+  margin: 3% auto;           /*centra el formulario*/
   margin-left: 10%;           /*permite ajustar centrada mente la imagen*/
   height: auto;               /*altura del formulario*/
   width: 30%;                 /*ancho de formulario en pantalla*/
