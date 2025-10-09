@@ -104,7 +104,7 @@ import { signInWithEmailAndPassword } from 'firebase/auth';
   --ion-background-color: white;                /*remplaza el color por defecto de ionic*/
   width: 30%;                                     /*ancho del formulario*/
   height: auto;                                   /*alto del formulario*/
-  margin: 10% auto;                               /*margen del formulario*/
+  margin: 10%;                                    /*margen del formulario*/
   margin-right: 60%;                              /*permite ajustar centrada mente la imagen*/
   border-radius: 25px;                            /*borde redondeado*/
   box-shadow: 0 4px 15px rgb(0, 0, 0, 0.3);     /*sombra del formulario*/

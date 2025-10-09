@@ -8,7 +8,7 @@
 
 
   <ion-content id="registro">
-    <img id="imagen" src="/universidad_imagen.jpg"></img>
+    <img id="imagen" src="\universidad_imagen.jpg"/>
 
       <div id="formulario">
         <ion-list>
@@ -142,7 +142,7 @@ function registro() {
 #formulario {
   --ion-background-color: white;     /*sobreescribir color de ionic*/
   text-align: center;         /*centra el contenido del formulario*/
-  margin: 3% auto;           /*centra el formulario*/
+  margin: 10%;                /*centra el formulario*/
   margin-left: 10%;           /*permite ajustar centrada mente la imagen*/
   height: auto;               /*altura del formulario*/
   width: 30%;                 /*ancho de formulario en pantalla*/

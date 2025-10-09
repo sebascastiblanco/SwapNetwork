@@ -91,6 +91,7 @@ import {
   school,
   library
 } from 'ionicons/icons';
+
 </script>
 
 <style scoped>
