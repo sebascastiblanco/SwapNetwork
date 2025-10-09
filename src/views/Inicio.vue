@@ -73,8 +73,7 @@ import { signInWithEmailAndPassword } from 'firebase/auth';
  const iniciar_sesion = async () => {
   try {
     await signInWithEmailAndPassword(auth, correo.value, contrasena.value);
-    alert("Sesion iniciada con exito");
-    router.push('/zonaswap');
+    router.push('/MenuPrincipal');
   } catch (error) {
     alert("Correo o contraseña invalidos")
     errorMessage.value = error.message;
