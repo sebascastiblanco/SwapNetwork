@@ -6,50 +6,112 @@
       </ion-toolbar>
     </ion-header>
 
-    <ion-content>
+    <ion-content id="#zonaswap">
 
       <!-- Creacion del formulario para aplicar filtros -->
       <ion-list>
 
-          <ion-label>Asignatura - CAI - CADI</ion-label>
+        <div id="archivos">
+          <ion-text class="texto">
+            Archivos
+          </ion-text>
+            <ion-icon :icon="briefcaseOutline" class="icon"></ion-icon>
+        </div>
+        <div id="calificaciones">
+          <ion-text>
+            Calificaciones
+          </ion-text>
+        </div>
+        <div id="profes">
+          <ion-text>
+            Profes
+          </ion-text>
+        </div>
 
           <!-- opciones a escoger -->
 
-          <ion-item>
-            <ion-select id="asignatura" v-model="asignatura" interface="popover">
-              <ion-select-option class="seleccion" value="programacion1"> Programación 1 </ion-select-option>
-              <ion-select-option class="seleccion" value="programacion2"> Programación 2 </ion-select-option>
-              <ion-select-option class="seleccion" value="programacio3n"> Programación Web </ion-select-option>
-              <ion-select-option class="seleccion" value="matematicas1"> Matematicas Discretas </ion-select-option>
-              <ion-select-option class="seleccion" value="matematicas2"> Fundamentos de Electronica </ion-select-option>
-            </ion-select>
-          </ion-item>
           
-          <ion-label>Gestor del conocimiento</ion-label>
 
-          <!-- opciones a escoger -->
-
-          <ion-item>
-            <ion-select id="profesor" v-model="maestro" interface="popover">
-              <ion-select-option class="seleccion" value="1">Fernando Sotelo</ion-select-option>
-              <ion-select-option class="seleccion" value="2">Evelyn Rodriguez</ion-select-option>
-              <ion-select-option class="seleccion" value="3">William Galvis</ion-select-option>
-            </ion-select>
-          </ion-item>
+          <!-- opciones a escoger
 
           <ion-item>
             <ion-button>Buscar</ion-button>
           </ion-item>
+           -->
       </ion-list>
     </ion-content>
   </ion-page>
 </template>
 
 <script setup>
-import {IonPage, IonTitle, IonHeader, IonToolbar, IonContent, IonList, IonItem, IonSelect, IonLabel, IonSelectOption, IonButton} from '@ionic/vue';
+import {IonPage, IonTitle, IonHeader, IonToolbar, IonContent, IonList, IonItem, IonButton, IonText, IonIcon} from '@ionic/vue';
+import { briefcaseOutline } from 'ionicons/icons'
 
 </script>
 
 <style>
+
+#zonaswap {
+  --background: #E3F2FD;
+  height: 100%;
+  width: auto;
+
+}
+
+#archivos {
+  display: inline-block;
+  background: #2196F3;
+  height: 360px;
+  width: 47%;
+  margin: 50px;
+  margin-bottom: 0;
+  border-radius: 40px;
+  /*Texto y espacio central*/
+  text-align: center;
+  font-size: 30px;
+  padding-top: 40px;
+  padding-bottom: 10px;
+}
+
+.icon {
+  display: block;
+  font-size: 200px;
+  color: #ffffff;
+  margin: 20px;
+  padding-left: 36%;
+}
+
+#profes {
+  display: inline-block;
+  background: #26A69A;
+  height: 360px;
+  width: 47%;
+  margin: 50px;
+  border-radius: 40px;
+  /*Texto y espacio central*/
+  text-align: center;
+  font-size: 30px;
+}
+
+#calificaciones {
+  float: right;
+  background: #66BB6A;
+  height: 770px;
+  width: 42%;
+  margin: 50px;
+  border-radius: 40px;
+  /*Texto y espacio central*/
+  text-align: center;
+  font-size: 30px;
+}
+
+@media (min-width: 1200px) and (max-width: 1599px) {
+  #archivos {
+    width: 45%;
+  }
+  #profes {
+    width: 45%;
+  }
+}
 
 </style>

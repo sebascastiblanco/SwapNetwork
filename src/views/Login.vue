@@ -194,6 +194,22 @@ ion-item {
   padding: 5px;         /*espacio entre elementos*/
 }
 
+@media (min-width: 1200px) and (max-width: 1599px) {
+  #registro {
+    height: 100vh;
+    width: auto;
+    text-align: center;
+  }
 
+  #formulario {
+    margin-top: 20%;
+  }
+
+  .link {
+    text-align: center;
+    justify-content: center;
+    margin-left: 25%;
+  }
+}
 
 </style>
