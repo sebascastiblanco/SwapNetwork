@@ -1,48 +1,33 @@
 <template>
   <ion-page>
-    <!-- Header con verde pastel visible -->
     <ion-header>
       <ion-toolbar class="custom-toolbar">
         <ion-buttons slot="start">
-          <ion-back-button 
-            default-href="/"
-            class="back-button"
-          ></ion-back-button>
+          <ion-back-button default-href="/"></ion-back-button>
         </ion-buttons>
-        <ion-title class="toolbar-title">Conecta y Crea</ion-title>
+        <ion-title>Conecta y Crea</ion-title>
       </ion-toolbar>
     </ion-header>
 
     <ion-content class="ion-padding custom-content">
       <!-- Sección de introducción -->
       <div class="intro-section">
-        <div class="intro-icon">
-          <ion-icon :icon="peopleCircle" class="icon-large"></ion-icon>
-        </div>
-        <h2 class="intro-title">Conéctate y Colabora</h2>
-        <p class="intro-text">Forma grupos de estudio o tutorías con personas que comparten tus intereses académicos.</p>
+        <h2>Conéctate y Colabora</h2>
+        <p>Forma grupos de estudio o tutorías con personas que comparten tus intereses académicos.</p>
       </div>
 
       <!-- Selector de tipo de actividad -->
       <div class="activity-selector">
-        <h3 class="section-title">¿Qué deseas crear?</h3>
+        <h3>¿Qué deseas crear?</h3>
         <div class="selector-buttons">
-          <ion-segment 
-            value="tutoring" 
-            @ionChange="onActivityTypeChange($event)"
-            class="custom-segment"
-          >
-            <ion-segment-button value="tutoring" class="segment-button">
-              <div class="segment-content">
-                <ion-icon :icon="school" class="segment-icon"></ion-icon>
-                <ion-label class="segment-label">Tutoría</ion-label>
-              </div>
+          <ion-segment value="tutoring" @ionChange="onActivityTypeChange($event)">
+            <ion-segment-button value="tutoring">
+              <ion-icon :icon="school"></ion-icon>
+              <ion-label>Tutoría</ion-label>
             </ion-segment-button>
-            <ion-segment-button value="studyGroup" class="segment-button">
-              <div class="segment-content">
-                <ion-icon :icon="people" class="segment-icon"></ion-icon>
-                <ion-label class="segment-label">Grupo de Estudio</ion-label>
-              </div>
+            <ion-segment-button value="studyGroup">
+              <ion-icon :icon="people"></ion-icon>
+              <ion-label>Grupo de Estudio</ion-label>
             </ion-segment-button>
           </ion-segment>
         </div>
@@ -50,23 +35,21 @@
 
       <!-- Formulario de creación -->
       <div class="creation-form" v-if="showForm">
-        <ion-card class="form-card">
-          <ion-card-header class="card-header">
-            <ion-card-title class="card-title">
+        <ion-card>
+          <ion-card-header>
+            <ion-card-title>
               {{ activityType === 'tutoring' ? 'Crear Nueva Tutoría' : 'Crear Grupo de Estudio' }}
             </ion-card-title>
           </ion-card-header>
 
-          <ion-card-content class="card-content">
+          <ion-card-content>
             <!-- Selección de materia -->
-            <ion-item class="form-item custom-item">
-              <ion-label position="stacked" class="input-label">Materia *</ion-label>
+            <ion-item class="form-item">
+              <ion-label position="stacked">Materia</ion-label>
               <ion-select 
                 placeholder="Selecciona una materia" 
                 v-model="selectedSubject"
                 interface="action-sheet"
-                class="custom-select"
-                :class="{ 'has-value': selectedSubject }"
               >
                 <ion-select-option value="matematicas">Matemáticas</ion-select-option>
                 <ion-select-option value="fisica">Física</ion-select-option>
@@ -80,14 +63,12 @@
             </ion-item>
 
             <!-- Selección de profesor (solo para tutorías) -->
-            <ion-item class="form-item custom-item" v-if="activityType === 'tutoring'">
-              <ion-label position="stacked" class="input-label">Profesor</ion-label>
+            <ion-item class="form-item" v-if="activityType === 'tutoring'">
+              <ion-label position="stacked">Profesor</ion-label>
               <ion-select 
                 placeholder="Selecciona un profesor" 
                 v-model="selectedTeacher"
                 interface="action-sheet"
-                class="custom-select"
-                :class="{ 'has-value': selectedTeacher }"
               >
                 <ion-select-option value="profesor1">Prof. García</ion-select-option>
                 <ion-select-option value="profesor2">Prof. Martínez</ion-select-option>
@@ -97,14 +78,12 @@
             </ion-item>
 
             <!-- Selección de grupo (solo para grupos de estudio) -->
-            <ion-item class="form-item custom-item" v-if="activityType === 'studyGroup'">
-              <ion-label position="stacked" class="input-label">Grupo</ion-label>
+            <ion-item class="form-item" v-if="activityType === 'studyGroup'">
+              <ion-label position="stacked">Grupo</ion-label>
               <ion-select 
                 placeholder="Selecciona un grupo" 
                 v-model="selectedGroup"
                 interface="action-sheet"
-                class="custom-select"
-                :class="{ 'has-value': selectedGroup }"
               >
                 <ion-select-option value="grupo1">Grupo A - Matemáticas Avanzadas</ion-select-option>
                 <ion-select-option value="grupo2">Grupo B - Física Cuántica</ion-select-option>
@@ -114,63 +93,44 @@
             </ion-item>
 
             <!-- Descripción -->
-            <ion-item class="form-item custom-item">
-              <ion-label position="stacked" class="input-label">Descripción</ion-label>
+            <ion-item class="form-item">
+              <ion-label position="stacked">Descripción</ion-label>
               <ion-textarea 
                 v-model="description" 
                 placeholder="Describe el objetivo de esta actividad..."
                 rows="3"
                 auto-grow
-                class="custom-textarea"
-                :class="{ 'has-value': description }"
               ></ion-textarea>
             </ion-item>
 
-            <!-- Selector de fecha y hora MEJORADO -->
-            <div class="datetime-selector">
-              <h4 class="datetime-title">Fecha y Hora *</h4>
+            <!-- NUEVO: Botón con icono "+" para calendario -->
+            <div class="calendar-section">
+              <h4 class="section-title">Seleccionar Fecha y Hora</h4>
               
-              <!-- Selector de fecha simple -->
-              <div class="date-selector">
-                <label class="selector-label">Selecciona el día:</label>
-                <div class="date-buttons">
-                  <button 
-                    v-for="date in availableDates" 
-                    :key="date.value"
-                    @click="selectDate(date.value)"
-                    :class="['date-button', { 'selected': selectedDate && selectedDate.split('T')[0] === date.value }]"
-                  >
-                    <span class="date-day">{{ date.day }}</span>
-                    <span class="date-number">{{ date.number }}</span>
-                    <span class="date-month">{{ date.month }}</span>
-                  </button>
+              <!-- Botón flotante con "+" -->
+              <div class="floating-calendar-button" @click="openCalendarModal">
+                <div class="plus-button">
+                  <ion-icon :icon="add"></ion-icon>
                 </div>
+                <span class="button-text">Agregar fecha</span>
               </div>
 
-              <!-- Selector de hora simple -->
-              <div class="time-selector" v-if="selectedDate">
-                <label class="selector-label">Selecciona la hora:</label>
-                <div class="time-buttons">
-                  <button 
-                    v-for="timeSlot in availableTimes" 
-                    :key="timeSlot.value"
-                    @click="selectTime(timeSlot.value)"
-                    :class="['time-button', { 'selected': selectedTime === timeSlot.value }]"
-                  >
-                    {{ timeSlot.label }}
-                  </button>
+              <!-- Fecha seleccionada (si existe) -->
+              <div class="selected-date-card" v-if="selectedDate">
+                <div class="date-header">
+                  <ion-icon :icon="calendar" class="date-icon"></ion-icon>
+                  <span>Fecha seleccionada:</span>
                 </div>
-              </div>
-
-              <!-- Fecha seleccionada -->
-              <div class="selected-datetime" v-if="selectedDate && selectedTime">
-                <div class="datetime-display">
-                  <ion-icon :icon="calendar" class="datetime-icon"></ion-icon>
-                  <div class="datetime-text">
-                    <p class="datetime-label">Tu evento será el:</p>
-                    <p class="datetime-value">{{ formatSelectedDateTime() }}</p>
-                  </div>
-                </div>
+                <p class="date-display">{{ formatDate(selectedDate) }}</p>
+                <ion-button 
+                  fill="clear" 
+                  size="small" 
+                  @click="openCalendarModal"
+                  class="edit-button"
+                >
+                  <ion-icon :icon="create" slot="start"></ion-icon>
+                  Editar
+                </ion-button>
               </div>
             </div>
 
@@ -181,19 +141,81 @@
               :disabled="!isFormValid"
               @click="createEvent"
             >
-              <ion-icon :icon="addCircle" slot="start" class="button-icon"></ion-icon>
+              <ion-icon :icon="addCircle" slot="start"></ion-icon>
               Crear Evento
             </ion-button>
           </ion-card-content>
         </ion-card>
       </div>
+
+      <!-- Modal de calendario MEJORADO -->
+      <ion-modal 
+        :is-open="calendarModalOpen" 
+        @didDismiss="calendarModalOpen = false"
+        class="calendar-modal"
+        :initial-breakpoint="0.8"
+        :breakpoints="[0, 0.8, 1]"
+      >
+        <div class="calendar-modal-content">
+          <ion-toolbar class="modal-toolbar">
+            <ion-title>Selecciona Fecha y Hora</ion-title>
+            <ion-buttons slot="end">
+              <ion-button @click="calendarModalOpen = false" fill="clear">
+                <ion-icon :icon="close"></ion-icon>
+              </ion-button>
+            </ion-buttons>
+          </ion-toolbar>
+
+          <div class="calendar-container">
+            <!-- Selector de fecha MEJORADO -->
+            <div class="date-picker-section">
+              <h4 class="picker-title">📅 Selecciona una fecha</h4>
+              <ion-datetime 
+                presentation="date" 
+                v-model="tempDate"
+                :min="minDate"
+                :max="maxDate"
+                class="green-datetime"
+                color="success"
+              >
+                <span slot="title">Selecciona la fecha</span>
+              </ion-datetime>
+            </div>
+
+            <!-- Selector de hora MEJORADO -->
+            <div class="time-picker-section" v-if="tempDate">
+              <h4 class="picker-title">⏰ Selecciona una hora</h4>
+              <ion-datetime 
+                presentation="time" 
+                v-model="tempTime"
+                class="green-datetime"
+                color="success"
+              >
+                <span slot="title">Selecciona la hora</span>
+              </ion-datetime>
+            </div>
+
+            <!-- Botón para confirmar selección -->
+            <div class="modal-actions" v-if="tempDate && tempTime">
+              <ion-button 
+                expand="block" 
+                @click="confirmDateTime"
+                class="confirm-button"
+                strong="true"
+              >
+                <ion-icon :icon="checkmark" slot="start"></ion-icon>
+                Confirmar Fecha y Hora
+              </ion-button>
+            </div>
+          </div>
+        </div>
+      </ion-modal>
     </ion-content>
   </ion-page>
 </template>
 
 <script setup>
-// Importaciones de Vue y Ionic
-import { ref, computed, onMounted } from 'vue';
+import { ref, computed } from 'vue';
 import { 
   IonPage, 
   IonHeader, 
@@ -215,343 +237,173 @@ import {
   IonIcon,
   IonSegment,
   IonSegmentButton,
+  IonModal,
+  IonDatetime,
   toastController
 } from '@ionic/vue';
-
-// Importación de iconos
 import { 
   school, 
   people, 
   calendar, 
   addCircle,
-  peopleCircle
+  add,
+  create,
+  close,
+  checkmark
 } from 'ionicons/icons';
 
-// =============================================
-// VARIABLES REACTIVAS
-// =============================================
-
-// Tipo de actividad seleccionada (tutoría o grupo de estudio)
+// Variables reactivas
 const activityType = ref('tutoring');
-
-// Controla si se muestra el formulario
 const showForm = ref(true);
-
-// Valores del formulario
 const selectedSubject = ref('');
 const selectedTeacher = ref('');
 const selectedGroup = ref('');
 const description = ref('');
-const selectedDate = ref(''); // Formato: YYYY-MM-DD
-const selectedTime = ref(''); // Formato: HH:MM
+const selectedDate = ref('');
+const calendarModalOpen = ref(false);
+const tempDate = ref('');
+const tempTime = ref('');
 
-// Fechas y horas disponibles
-const availableDates = ref([]);
-const availableTimes = ref([
-  { label: '08:00 AM', value: '08:00' },
-  { label: '09:00 AM', value: '09:00' },
-  { label: '10:00 AM', value: '10:00' },
-  { label: '11:00 AM', value: '11:00' },
-  { label: '12:00 PM', value: '12:00' },
-  { label: '01:00 PM', value: '13:00' },
-  { label: '02:00 PM', value: '14:00' },
-  { label: '03:00 PM', value: '15:00' },
-  { label: '04:00 PM', value: '16:00' },
-  { label: '05:00 PM', value: '17:00' }
-]);
+// Fechas mínima y máxima para el calendario
+const today = new Date();
+const minDate = today.toISOString();
+const maxDate = new Date(today.getFullYear() + 1, today.getMonth(), today.getDate()).toISOString();
 
-// =============================================
-// COMPUTED PROPERTIES
-// =============================================
-
-// Valida si el formulario está completo para habilitar el botón de crear
+// Computed properties
 const isFormValid = computed(() => {
-  try {
-    return selectedSubject.value && selectedDate.value && selectedTime.value;
-  } catch (error) {
-    console.error('Error validando formulario:', error);
-    return false;
-  }
+  return selectedSubject.value && selectedDate.value;
 });
 
-// =============================================
-// MÉTODOS DEL CICLO DE VIDA
-// =============================================
-
-onMounted(() => {
-  initializeAvailableDates();
-});
-
-// =============================================
-// MÉTODOS
-// =============================================
-
-/**
- * Inicializa las fechas disponibles para los próximos 15 días
- */
-const initializeAvailableDates = () => {
-  try {
-    const dates = [];
-    const today = new Date();
-    
-    for (let i = 0; i < 15; i++) {
-      const date = new Date();
-      date.setDate(today.getDate() + i);
-      
-      dates.push({
-        value: date.toISOString().split('T')[0], // YYYY-MM-DD
-        day: date.toLocaleDateString('es-ES', { weekday: 'short' }),
-        number: date.getDate(),
-        month: date.toLocaleDateString('es-ES', { month: 'short' })
-      });
-    }
-    
-    availableDates.value = dates;
-  } catch (error) {
-    console.error('Error inicializando fechas:', error);
-    // Fecha de respaldo en caso de error
-    availableDates.value = [
-      { value: new Date().toISOString().split('T')[0], day: 'Hoy', number: new Date().getDate(), month: 'Actual' }
-    ];
-  }
-};
-
-/**
- * Maneja el cambio entre tutoría y grupo de estudio
- */
+// Métodos
 const onActivityTypeChange = (ev) => {
-  try {
-    activityType.value = ev.detail.value;
+  activityType.value = ev.detail.value;
+  // Resetear formulario al cambiar tipo
+  selectedSubject.value = '';
+  selectedTeacher.value = '';
+  selectedGroup.value = '';
+  description.value = '';
+  selectedDate.value = '';
+};
+
+const openCalendarModal = () => {
+  // Si ya hay una fecha seleccionada, pre-cargar en el modal
+  if (selectedDate.value) {
+    const dateObj = new Date(selectedDate.value);
+    tempDate.value = dateObj.toISOString().split('T')[0];
+    tempTime.value = dateObj.toTimeString().split(' ')[0];
+  } else {
+    // Si no hay fecha seleccionada, establecer valores por defecto
+    tempDate.value = today.toISOString();
+    tempTime.value = '14:00';
+  }
+  calendarModalOpen.value = true;
+};
+
+const confirmDateTime = () => {
+  if (tempDate.value && tempTime.value) {
+    // Combinar fecha y hora
+    const datePart = tempDate.value.split('T')[0];
+    const timePart = tempTime.value.split('T')[1];
+    selectedDate.value = `${datePart}T${timePart}`;
+    calendarModalOpen.value = false;
     
-    // Limpia el formulario al cambiar de tipo de actividad
-    selectedSubject.value = '';
-    selectedTeacher.value = '';
-    selectedGroup.value = '';
-    description.value = '';
-    selectedDate.value = '';
-    selectedTime.value = '';
-  } catch (error) {
-    console.error('Error cambiando tipo de actividad:', error);
-    showErrorToast('Error al cambiar el tipo de actividad');
+    // Mostrar confirmación
+    showDateSelectedToast();
   }
 };
 
-/**
- * Selecciona una fecha
- */
-const selectDate = (date) => {
-  try {
-    selectedDate.value = date;
-    selectedTime.value = ''; // Resetear hora al cambiar fecha
-  } catch (error) {
-    console.error('Error seleccionando fecha:', error);
-    showErrorToast('Error al seleccionar la fecha');
-  }
+const showDateSelectedToast = async () => {
+  const toast = await toastController.create({
+    message: 'Fecha y hora seleccionadas correctamente',
+    duration: 2000,
+    color: 'success',
+    position: 'top'
+  });
+  await toast.present();
 };
 
-/**
- * Selecciona una hora
- */
-const selectTime = (time) => {
-  try {
-    selectedTime.value = time;
-  } catch (error) {
-    console.error('Error seleccionando hora:', error);
-    showErrorToast('Error al seleccionar la hora');
-  }
+const formatDate = (dateString) => {
+  const date = new Date(dateString);
+  return date.toLocaleString('es-ES', {
+    weekday: 'long',
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric',
+    hour: '2-digit',
+    minute: '2-digit'
+  });
 };
 
-/**
- * Formatea la fecha y hora seleccionada para mostrar
- */
-const formatSelectedDateTime = () => {
-  try {
-    if (!selectedDate.value || !selectedTime.value) return '';
-    
-    const date = new Date(selectedDate.value + 'T' + selectedTime.value);
-    return date.toLocaleString('es-ES', {
-      weekday: 'long',
-      year: 'numeric',
-      month: 'long',
-      day: 'numeric',
-      hour: '2-digit',
-      minute: '2-digit'
-    });
-  } catch (error) {
-    console.error('Error formateando fecha:', error);
-    return 'Fecha no disponible';
-  }
-};
-
-/**
- * Muestra un mensaje de error
- */
-const showErrorToast = async (message) => {
-  try {
-    const toast = await toastController.create({
-      message: message,
-      duration: 3000,
-      color: 'danger',
-      position: 'top'
-    });
-    await toast.present();
-  } catch (error) {
-    console.error('Error mostrando toast:', error);
-  }
-};
-
-/**
- * Crea el evento (tutoría o grupo de estudio)
- */
 const createEvent = async () => {
-  try {
-    // Validación adicional por seguridad
-    if (!selectedSubject.value || !selectedDate.value || !selectedTime.value) {
-      await showErrorToast('Por favor completa todos los campos obligatorios');
-      return;
-    }
+  // Aquí iría la lógica para guardar el evento
+  const toast = await toastController.create({
+    message: `¡${activityType.value === 'tutoring' ? 'Tutoría' : 'Grupo de estudio'} creado exitosamente!`,
+    duration: 2000,
+    color: 'success',
+    position: 'top'
+  });
+  await toast.present();
 
-    // Combinar fecha y hora para Firebase
-    const eventDateTime = `${selectedDate.value}T${selectedTime.value}:00`;
-    
-    // Aquí iría la conexión con Firebase
-    console.log('Creando evento con datos:', {
-      type: activityType.value,
-      subject: selectedSubject.value,
-      teacher: selectedTeacher.value,
-      group: selectedGroup.value,
-      description: description.value,
-      datetime: eventDateTime
-    });
-
-    // Mostrar mensaje de éxito
-    const toast = await toastController.create({
-      message: `¡${activityType.value === 'tutoring' ? 'Tutoría' : 'Grupo de estudio'} creado exitosamente!`,
-      duration: 2000,
-      color: 'success',
-      position: 'top'
-    });
-    
-    await toast.present();
-
-    // Limpiar el formulario después de crear
-    resetForm();
-
-  } catch (error) {
-    console.error('Error creando evento:', error);
-    await showErrorToast('Error al crear el evento. Intenta nuevamente.');
-  }
-};
-
-/**
- * Reinicia el formulario a su estado inicial
- */
-const resetForm = () => {
-  try {
-    selectedSubject.value = '';
-    selectedTeacher.value = '';
-    selectedGroup.value = '';
-    description.value = '';
-    selectedDate.value = '';
-    selectedTime.value = '';
-  } catch (error) {
-    console.error('Error reiniciando formulario:', error);
-  }
+  // Resetear formulario después de crear
+  selectedSubject.value = '';
+  selectedTeacher.value = '';
+  selectedGroup.value = '';
+  description.value = '';
+  selectedDate.value = '';
 };
 </script>
 
 <style scoped>
-/* =============================================
-   VARIABLES DE COLORES VERDE PASTEL VISIBLES
-   ============================================= */
+/* Variables de colores */
 :root {
-  --primary-green: #A8E6CF;        /* Verde pastel principal - MUY VISIBLE */
-  --light-green: #D4F1E6;          /* Verde pastel claro */
-  --dark-green: #88D4AB;           /* Verde pastel oscuro */
-  --accent-green: #97E8C7;         /* Verde pastel de acento */
-  --background-light: #F0F9F5;     /* Fondo verde pastel muy claro */
+  --primary-green: #2E7D32;
+  --light-green: #4CAF50;
+  --dark-green: #1B5E20;
+  --accent-green: #388E3C;
   --white: #FFFFFF;
-  --light-gray: #F5F5F5;
+  --light-gray: #F8F9FA;
   --medium-gray: #E0E0E0;
   --dark-gray: #424242;
   --text-gray: #616161;
-  --text-dark: #212121;
-  --shadow-light: rgba(168, 230, 207, 0.3);
-  --shadow-medium: rgba(168, 230, 207, 0.5);
-  --success-green: #4CAF50;
 }
 
-/* =============================================
-   ESTILOS GENERALES
-   ============================================= */
 .custom-toolbar {
   --background: var(--primary-green);
-  --color: var(--text-dark);
-  box-shadow: 0 2px 8px var(--shadow-medium);
-}
-
-.toolbar-title {
-  font-weight: 700;
-  font-size: 1.2rem;
-  color: var(--text-dark);
-}
-
-.back-button {
-  --color: var(--text-dark);
+  --color: var(--white);
 }
 
 .custom-content {
-  --background: var(--background-light);
+  --background: var(--light-gray);
 }
 
-/* =============================================
-   SECCIÓN DE INTRODUCCIÓN
-   ============================================= */
+/* Sección de introducción */
 .intro-section {
   text-align: center;
   margin-bottom: 2rem;
-  padding: 1.5rem 1rem;
-  background: var(--white);
-  border-radius: 16px;
-  box-shadow: 0 4px 12px var(--shadow-light);
-  border: 2px solid var(--primary-green);
+  padding: 0 1rem;
 }
 
-.intro-icon {
-  margin-bottom: 1rem;
-}
-
-.icon-large {
-  font-size: 3rem;
+.intro-section h2 {
   color: var(--primary-green);
-}
-
-.intro-title {
-  color: var(--dark-green);
-  font-weight: 700;
+  font-weight: 600;
   margin-bottom: 1rem;
-  font-size: 1.5rem;
 }
 
-.intro-text {
+.intro-section p {
   color: var(--text-gray);
   line-height: 1.6;
   font-size: 1rem;
-  margin: 0;
 }
 
-/* =============================================
-   SELECTOR DE ACTIVIDAD
-   ============================================= */
+/* Selector de actividad */
 .activity-selector {
   margin-bottom: 2rem;
 }
 
-.section-title {
+.activity-selector h3 {
   color: var(--dark-gray);
   margin-bottom: 1rem;
   text-align: center;
-  font-weight: 600;
 }
 
 .selector-buttons {
@@ -559,360 +411,218 @@ const resetForm = () => {
   justify-content: center;
 }
 
-.custom-segment {
-  --background: var(--white);
-  border-radius: 12px;
-  padding: 4px;
-  box-shadow: 0 2px 8px var(--shadow-light);
-  border: 1px solid var(--primary-green);
-}
-
-.segment-button {
-  --background: transparent;
-  --background-checked: var(--primary-green);
-  --color: var(--text-gray);
-  --color-checked: var(--text-dark);
-  --border-radius: 8px;
-  --indicator-color: transparent;
-  min-height: 48px;
-}
-
-.segment-content {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 4px;
-}
-
-.segment-icon {
-  font-size: 1.2rem;
-}
-
-.segment-label {
-  font-size: 0.8rem;
-  font-weight: 500;
-}
-
-/* =============================================
-   FORMULARIO DE CREACIÓN
-   ============================================= */
+/* Formulario de creación */
 .creation-form {
   max-width: 600px;
   margin: 0 auto;
 }
 
-.form-card {
-  border-radius: 16px;
-  box-shadow: 0 4px 16px var(--shadow-medium);
-  overflow: hidden;
-  border: 2px solid var(--primary-green);
-}
-
-.card-header {
-  padding-bottom: 0;
-  background: linear-gradient(135deg, var(--primary-green), var(--accent-green));
-}
-
-.card-title {
-  color: var(--text-dark);
-  font-weight: 700;
-  font-size: 1.3rem;
-  text-align: center;
-}
-
-.card-content {
-  padding-top: 1rem;
-}
-
-.custom-item {
+.form-item {
+  margin-bottom: 1.5rem;
   --background: var(--white);
-  border-radius: 12px;
-  margin-bottom: 1.5rem;
-  border: 1px solid var(--medium-gray);
-  transition: all 0.3s ease;
+  border-radius: 8px;
 }
 
-.custom-item:focus-within {
-  border-color: var(--primary-green);
-  box-shadow: 0 0 0 2px var(--shadow-light);
-}
-
-.input-label {
-  color: var(--dark-gray);
-  font-weight: 600;
-  margin-bottom: 8px;
-}
-
-.custom-select, .custom-textarea {
-  --placeholder-color: var(--text-gray);
-  --placeholder-opacity: 0.8;
-}
-
-.has-value {
-  border-color: var(--primary-green);
-  background-color: var(--light-green);
-}
-
-/* =============================================
-   SELECTOR DE FECHA Y HORA MEJORADO
-   ============================================= */
-.datetime-selector {
+/* NUEVO: Sección de calendario */
+.calendar-section {
   margin: 2rem 0;
-  padding: 1rem;
-  background: var(--white);
-  border-radius: 12px;
-  border: 1px solid var(--primary-green);
 }
 
-.datetime-title {
-  color: var(--dark-green);
-  margin-bottom: 1rem;
-  font-weight: 600;
-  text-align: center;
-}
-
-.selector-label {
-  display: block;
+.section-title {
   color: var(--dark-gray);
-  font-weight: 500;
-  margin-bottom: 0.5rem;
-  font-size: 0.9rem;
-}
-
-/* Selector de fecha */
-.date-selector {
-  margin-bottom: 1.5rem;
-}
-
-.date-buttons {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(70px, 1fr));
-  gap: 0.5rem;
-  margin-top: 0.5rem;
-}
-
-.date-button {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  padding: 0.75rem 0.5rem;
-  border: 2px solid var(--medium-gray);
-  border-radius: 8px;
-  background: var(--white);
-  cursor: pointer;
-  transition: all 0.3s ease;
-  min-height: 60px;
-}
-
-.date-button:hover {
-  border-color: var(--primary-green);
-  transform: translateY(-2px);
-}
-
-.date-button.selected {
-  background: var(--primary-green);
-  border-color: var(--dark-green);
-  color: var(--text-dark);
-  font-weight: 600;
-}
-
-.date-day {
-  font-size: 0.7rem;
-  font-weight: 500;
-  text-transform: uppercase;
-}
-
-.date-number {
-  font-size: 1.2rem;
-  font-weight: 700;
-  margin: 0.1rem 0;
-}
-
-.date-month {
-  font-size: 0.7rem;
-  font-weight: 500;
-  text-transform: uppercase;
-}
-
-/* Selector de hora */
-.time-selector {
-  margin-bottom: 1.5rem;
-}
-
-.time-buttons {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
-  gap: 0.5rem;
-  margin-top: 0.5rem;
-}
-
-.time-button {
-  padding: 0.75rem 0.5rem;
-  border: 2px solid var(--medium-gray);
-  border-radius: 8px;
-  background: var(--white);
-  cursor: pointer;
-  transition: all 0.3s ease;
-  font-weight: 500;
-}
-
-.time-button:hover {
-  border-color: var(--primary-green);
-  transform: translateY(-2px);
-}
-
-.time-button.selected {
-  background: var(--primary-green);
-  border-color: var(--dark-green);
-  color: var(--text-dark);
-  font-weight: 600;
-}
-
-/* Fecha seleccionada */
-.selected-datetime {
-  background: var(--light-green);
-  padding: 1rem;
-  border-radius: 12px;
-  border: 1px solid var(--primary-green);
-}
-
-.datetime-display {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-}
-
-.datetime-icon {
-  font-size: 1.5rem;
-  color: var(--dark-green);
-}
-
-.datetime-text {
-  flex: 1;
-}
-
-.datetime-label {
-  margin: 0 0 4px 0;
-  color: var(--dark-green);
-  font-weight: 500;
-  font-size: 0.9rem;
-}
-
-.datetime-value {
-  margin: 0;
-  color: var(--text-dark);
-  font-weight: 600;
+  margin-bottom: 1rem;
   font-size: 1rem;
+  font-weight: 600;
 }
 
-/* =============================================
-   BOTÓN DE CREAR EVENTO
-   ============================================= */
+/* Botón flotante con "+" */
+.floating-calendar-button {
+  display: flex;
+  align-items: center;
+  padding: 1rem;
+  background: var(--white);
+  border: 2px dashed var(--medium-gray);
+  border-radius: 12px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  margin-bottom: 1rem;
+}
+
+.floating-calendar-button:hover {
+  border-color: var(--primary-green);
+  background: var(--light-gray);
+}
+
+.plus-button {
+  width: 40px;
+  height: 40px;
+  background: var(--primary-green);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 1rem;
+  transition: all 0.3s ease;
+}
+
+.plus-button ion-icon {
+  color: var(--white);
+  font-size: 1.5rem;
+}
+
+.button-text {
+  color: var(--text-gray);
+  font-weight: 500;
+}
+
+/* Tarjeta de fecha seleccionada */
+.selected-date-card {
+  background: var(--white);
+  border: 1px solid var(--medium-gray);
+  border-radius: 12px;
+  padding: 1.5rem;
+  margin-top: 1rem;
+}
+
+.date-header {
+  display: flex;
+  align-items: center;
+  margin-bottom: 0.5rem;
+}
+
+.date-icon {
+  color: var(--primary-green);
+  margin-right: 0.5rem;
+  font-size: 1.2rem;
+}
+
+.date-header span {
+  color: var(--dark-gray);
+  font-weight: 600;
+}
+
+.date-display {
+  color: var(--text-gray);
+  margin: 0.5rem 0;
+  font-size: 1rem;
+  line-height: 1.4;
+}
+
+.edit-button {
+  --color: var(--primary-green);
+  margin-top: 0.5rem;
+}
+
+/* Botón de crear */
 .create-button {
+  --background: var(--accent-green);
+  --background-hover: var(--dark-green);
+  --background-activated: var(--dark-green);
+  margin-top: 1rem;
+}
+
+/* Modal de calendario MEJORADO */
+.calendar-modal-content {
+  background: var(--white);
+  border-radius: 16px 16px 0 0;
+}
+
+.modal-toolbar {
+  --background: var(--primary-green);
+  --color: var(--white);
+  border-bottom: 1px solid var(--medium-gray);
+}
+
+.calendar-container {
+  padding: 1rem;
+}
+
+.date-picker-section, .time-picker-section {
+  margin-bottom: 2rem;
+}
+
+.picker-title {
+  color: var(--dark-gray);
+  margin-bottom: 1rem;
+  text-align: center;
+  font-size: 1.1rem;
+  font-weight: 600;
+}
+
+/* Calendario verde personalizado */
+.green-datetime {
+  --background: var(--white);
+  --border-radius: 12px;
+  --wheel-highlight-background: var(--light-green);
+  --wheel-fade-background-rgb: 76, 175, 80, 0.1;
+}
+
+/* Asegurar que el calendario use colores verdes */
+::v-deep .datetime-ready .datetime-color-success {
+  color: var(--primary-green) !important;
+}
+
+::v-deep .datetime-ready ion-datetime {
+  color: var(--primary-green) !important;
+}
+
+::v-deep .datetime-ready .datetime-highlight {
+  background: var(--light-green) !important;
+}
+
+::v-deep .datetime-ready .datetime-active {
+  color: var(--white) !important;
+  background: var(--primary-green) !important;
+}
+
+.modal-actions {
+  margin-top: 2rem;
+  padding: 0 1rem;
+}
+
+.confirm-button {
   --background: var(--primary-green);
   --background-hover: var(--dark-green);
   --background-activated: var(--dark-green);
-  --border-radius: 12px;
-  margin-top: 1rem;
-  font-weight: 700;
-  height: 50px;
-  box-shadow: 0 4px 8px var(--shadow-medium);
-  --color: var(--text-dark);
 }
 
-.create-button:disabled {
-  --background: var(--medium-gray);
-  --color: var(--text-gray);
-}
-
-/* =============================================
-   ESTILOS RESPONSIVE
-   ============================================= */
+/* Responsive */
 @media (max-width: 768px) {
   .creation-form {
     padding: 0 0.5rem;
   }
   
-  .intro-section {
-    padding: 1rem 0.5rem;
+  .calendar-container {
+    padding: 0.5rem;
   }
   
-  .card-title {
-    font-size: 1.1rem;
+  .floating-calendar-button {
+    padding: 0.8rem;
   }
   
-  .date-buttons {
-    grid-template-columns: repeat(auto-fit, minmax(60px, 1fr));
-  }
-  
-  .time-buttons {
-    grid-template-columns: repeat(auto-fit, minmax(80px, 1fr));
+  .plus-button {
+    width: 35px;
+    height: 35px;
   }
 }
 
-@media (max-width: 480px) {
-  .segment-content {
-    flex-direction: row;
-    gap: 8px;
-  }
-  
-  .segment-label {
-    font-size: 0.9rem;
-  }
-  
-  .date-button {
-    min-height: 50px;
-    padding: 0.5rem 0.25rem;
-  }
-  
-  .date-number {
-    font-size: 1rem;
-  }
+/* Estilos para elementos de Ionic */
+ion-segment {
+  --background: var(--white);
 }
 
-/* =============================================
-   ANIMACIONES Y TRANSICIONES
-   ============================================= */
-.form-card {
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
+ion-segment-button {
+  --color: var(--text-gray);
+  --color-checked: var(--primary-green);
+  --indicator-color: var(--primary-green);
 }
 
-.form-card:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 6px 20px var(--shadow-medium);
+ion-card {
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 }
 
-.date-button, .time-button {
-  transition: all 0.3s ease;
-}
-
-.date-button:active, .time-button:active {
-  transform: scale(0.95);
-}
-
-.create-button {
-  transition: all 0.3s ease;
-}
-
-.create-button:active:not(:disabled) {
-  transform: scale(0.98);
-}
-
-/* =============================================
-   ESTADOS DE VALIDACIÓN
-   ============================================= */
-.input-label {
-  position: relative;
-}
-
-.input-label::after {
-  content: '*';
-  color: #ff4444;
-  margin-left: 2px;
-  display: none;
-}
-
-.input-label[for*="required"]::after {
-  display: inline;
+ion-item {
+  --border-radius: 8px;
 }
 </style>
