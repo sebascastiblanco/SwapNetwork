@@ -2,7 +2,7 @@
   <ion-page>
     <ion-header>
       <ion-toolbar>
-        <ion-title>Visualizacion Gestor del Conocimiento</ion-title>
+        <ion-title><ion-icon :icon="arrowBackOutline" id="volver"></ion-icon>Visualizacion Gestor del Conocimiento</ion-title>
       </ion-toolbar>
     </ion-header>
 
@@ -15,17 +15,21 @@
           <ion-text class="texto">
             Archivos
           </ion-text>
-            <ion-icon :icon="briefcaseOutline" class="icon"></ion-icon>
+            <ion-icon :icon="folderOpenOutline" class="icon"></ion-icon>
         </div>
         <div id="calificaciones">
           <ion-text>
             Calificaciones
           </ion-text>
+          <ion-icon :icon="checkmarkDoneOutline" class="icon2"></ion-icon>
+          
         </div>
         <div id="profes">
           <ion-text>
             Profes
           </ion-text>
+          <ion-icon :icon="languageOutline" class="icon"></ion-icon>
+          
         </div>
 
           <!-- opciones a escoger -->
@@ -45,7 +49,9 @@
 
 <script setup>
 import {IonPage, IonTitle, IonHeader, IonToolbar, IonContent, IonList, IonItem, IonButton, IonText, IonIcon} from '@ionic/vue';
-import { briefcaseOutline } from 'ionicons/icons'
+import { folderOpenOutline } from 'ionicons/icons'
+import { arrowBackOutline, checkmarkDoneOutline, languageOutline } from 'ionicons/icons'
+
 
 </script>
 
@@ -73,6 +79,13 @@ import { briefcaseOutline } from 'ionicons/icons'
   padding-bottom: 10px;
 }
 
+#volver {
+  display: inline-block;
+  font-size: 20px;
+  color: black;
+  padding-right: 20px;
+}
+
 .icon {
   display: block;
   font-size: 200px;
@@ -91,6 +104,7 @@ import { briefcaseOutline } from 'ionicons/icons'
   /*Texto y espacio central*/
   text-align: center;
   font-size: 30px;
+  padding-top: 40px;
 }
 
 #calificaciones {
@@ -103,6 +117,16 @@ import { briefcaseOutline } from 'ionicons/icons'
   /*Texto y espacio central*/
   text-align: center;
   font-size: 30px;
+  padding-top: 40px;
+}
+
+.icon2 {
+  display: block;
+  font-size: 200px;
+  color: white;
+  margin: 20px;
+  padding-top: 20%;
+  padding-left: 35%;
 }
 
 @media (min-width: 1200px) and (max-width: 1599px) {
