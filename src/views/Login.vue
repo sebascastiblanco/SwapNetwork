@@ -195,10 +195,8 @@ ion-item {
   padding: 5px;         /*espacio entre elementos*/
 }
 
-/*@media (min-width: 800px) and (max-width: 1199px) {*/
 
-
-@media (min-width: 768px) and (max-width: 1366px) {
+@media (min-width: 500px) and (max-width: 1366px) {
 
 #imagen {
   position: absolute;

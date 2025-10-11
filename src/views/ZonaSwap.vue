@@ -6,7 +6,7 @@
       </ion-toolbar>
     </ion-header>
 
-    <ion-content id="#zonaswap">
+    <ion-content id="zonaswap">
 
       <!-- Creacion del formulario para aplicar filtros -->
       <ion-list>
@@ -129,12 +129,24 @@ import { arrowBackOutline, checkmarkDoneOutline, languageOutline } from 'ionicon
   padding-left: 35%;
 }
 
-@media (min-width: 800px) and (max-width: 1599px) {
+@media (min-width: 500px) and (max-width: 1366px) {
+  
   #archivos {
-    width: 45%;
+    display: inline-block;
+    width: 40%;
   }
+
   #profes {
-    width: 45%;
+    display: inline-block;
+    width: 40%;
+  }
+
+  .icon {
+    padding-left: 30%;
+  }
+
+  .icon2 {
+    padding-top: 35%;
   }
 }
 
