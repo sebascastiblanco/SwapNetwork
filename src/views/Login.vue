@@ -196,37 +196,37 @@ ion-item {
 }
 
 
-@media (min-width: 500px) and (max-width: 1536px) {
+@media (min-width: 500px){
 
 #imagen {
   position: absolute;
   top: 0;
   right: 0;
   bottom: 0;
-  height: 100%;
+  height: 43rem;
   width: 50%;
-  object-fit: cover;
 }
 
  #registro {
+    display: flex;
+    flex-direction: column;
     height: 100vh;
-    width: auto;
-    text-align: center;
+    overflow: hidden;
   }
 
   #formulario {
-    margin-top: 5%;
+    margin-top: 6%;
   }
 
   #boton2 {
-    width: 30%;
-    margin-left: 35%;
+    width: 40%;
+    margin-left: 30%;
   }
 
   .link {
     text-align: center;
     justify-content: center;
-    margin-left: 20%;
+    margin-left: 10%;
   }
 }
 

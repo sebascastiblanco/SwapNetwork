@@ -135,7 +135,7 @@ import { signInWithEmailAndPassword } from 'firebase/auth';
   padding-top: 10px;          /*espacio superior del elemento*/
 }
 
-@media (min-width: 500px) and (max-width: 1536px) {
+@media (min-width: 500px) {
 
   #inicio {
     height: 100vh;
@@ -148,14 +148,14 @@ import { signInWithEmailAndPassword } from 'firebase/auth';
   }
 
   #boton {
-    width: 30%;
+    width: 40%;
     margin-left: 35%;
   }
 
   .enlace {
     text-align: center;
     justify-content: center;
-    margin-left: 20%;
+    margin-left: 10%;
   }
 }
 
