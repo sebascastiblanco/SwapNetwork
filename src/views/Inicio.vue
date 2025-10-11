@@ -135,7 +135,7 @@ import { signInWithEmailAndPassword } from 'firebase/auth';
   padding-top: 10px;          /*espacio superior del elemento*/
 }
 
-@media (min-width: 500px) and (max-width: 1366px) {
+@media (min-width: 500px) and (max-width: 1536px) {
 
   #inicio {
     height: 100vh;

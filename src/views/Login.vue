@@ -196,7 +196,7 @@ ion-item {
 }
 
 
-@media (min-width: 500px) and (max-width: 1366px) {
+@media (min-width: 500px) and (max-width: 1536px) {
 
 #imagen {
   position: absolute;
