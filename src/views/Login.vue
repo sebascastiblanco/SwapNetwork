@@ -132,7 +132,7 @@ function registro() {
   font-family:'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;       /*tipo de letra para el contenido*/
   justify-content: center;      /*centra horizontalmente el contenido*/
   align-items: center;        /*centra verticalmente el contenido*/
-  height: 100vh;          /*fija la altura de la pantalla*/
+  height: 100%;          /*fija la altura de la pantalla*/
 }
 
 #subtitulo {
@@ -194,21 +194,21 @@ ion-item {
   padding: 5px;         /*espacio entre elementos*/
 }
 
-@media (min-width: 1200px) and (max-width: 1599px) {
+@media (min-width: 800px) and (max-width: 1599px) {
   #registro {
-    height: 100vh;
+    height: 100%;
     width: auto;
     text-align: center;
   }
 
   #formulario {
-    margin-top: 20%;
+    margin-top: 11%;
   }
 
   .link {
     text-align: center;
     justify-content: center;
-    margin-left: 25%;
+    margin-left: 20%;
   }
 }
 

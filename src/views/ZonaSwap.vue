@@ -129,7 +129,7 @@ import { arrowBackOutline, checkmarkDoneOutline, languageOutline } from 'ionicon
   padding-left: 35%;
 }
 
-@media (min-width: 1200px) and (max-width: 1599px) {
+@media (min-width: 800px) and (max-width: 1599px) {
   #archivos {
     width: 45%;
   }

@@ -135,21 +135,22 @@ import { signInWithEmailAndPassword } from 'firebase/auth';
   padding-top: 10px;          /*espacio superior del elemento*/
 }
 
-@media (min-width: 1200px) and (max-width: 1599px) {
+@media (min-width: 800px) and (max-width: 1599px) {
   #inicio {
-    height: auto;
+    height: 100%;
     width: auto;
     text-align: center;
+    justify-content: center;
   }
 
   #formulario_inicio {
-    margin-top: 24%;
+    margin-top: 13%;
   }
 
   .enlace {
     text-align: center;
     justify-content: center;
-    margin-left: 25%;
+    margin-left: 20%;
   }
 }
 
