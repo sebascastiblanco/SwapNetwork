@@ -126,7 +126,6 @@ function registro() {
 }
 
 #registro {
-
   --background: linear-gradient(90deg, #7cc383, #3ad649);     /*color fondo todo el contenido*/
   text-align: center;     /*centra el texto del contenido*/
   font-family:'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;       /*tipo de letra para el contenido*/
@@ -194,8 +193,65 @@ ion-item {
   padding: 5px;         /*espacio entre elementos*/
 }
 
-@media (min-width: 800px) and (max-width: 1599px) {
-  #registro {
+/*@media (min-width: 800px) and (max-width: 1199px) {*/
+
+@media (max-width: 768px) {
+  #imagen {
+    display: none; /* Oculta la imagen en móviles para evitar deformaciones */
+  }
+
+  #formulario {
+    width: 90%; /* Ocupa casi todo el ancho */
+    margin: 5% auto; /* Centra el formulario */
+    padding: 20px;
+  }
+
+  #boton2 {
+    width: 100%; /* Botón ancho completo */
+    margin-left: 0;
+  }
+
+  .link {
+    margin-left: 0;
+  }
+}
+
+
+@media (min-width: 769px) and (max-width: 1199px) {
+  #imagen {
+    width: 35%; /* Reduce el tamaño de la imagen */
+    padding-right: 0;
+  }
+
+  #formulario {
+    width: 60%; /* Más ancho que en escritorio */
+    margin: 8% auto;
+  }
+
+  #boton2 {
+    width: 70%;
+    margin-left: 0;
+  }
+
+  .link {
+    margin-left: 0;
+  }
+}
+
+
+@media (min-width: 1200px) {
+  #imagen {
+    width: auto;
+    padding-right: 40%;
+  }
+
+  #formulario {
+    width: 30%;
+    margin: 10%;
+  }
+}
+
+ /* #registro {
     height: 100%;
     width: auto;
     text-align: center;
@@ -209,7 +265,6 @@ ion-item {
     text-align: center;
     justify-content: center;
     margin-left: 20%;
-  }
-}
+  }*/
 
 </style>
