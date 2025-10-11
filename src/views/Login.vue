@@ -118,11 +118,13 @@ function registro() {
 <style>
 
 #imagen {
-  z-index: -1;                            /*permite poner la imagen de fondo*/
-  position: absolute;                     /*permite el posicionamiento de la imagen*/
-  width: auto;                            /*ancho de la imagen automatico*/
-  height: 100%;                           /*ajusta la imagen al alto de la pantalla*/
-  padding-right: 40%;                     /*permite que la imagen se encuentre en el lado derecho*/
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  height: 100%;
+  width: 50%;
+  object-fit: cover;
 }
 
 #registro {
@@ -131,7 +133,7 @@ function registro() {
   font-family:'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;       /*tipo de letra para el contenido*/
   justify-content: center;      /*centra horizontalmente el contenido*/
   align-items: center;        /*centra verticalmente el contenido*/
-  height: 100%;          /*fija la altura de la pantalla*/
+  height: 100dvh;          /*fija la altura de la pantalla*/
 }
 
 #subtitulo {
@@ -195,76 +197,39 @@ ion-item {
 
 /*@media (min-width: 800px) and (max-width: 1199px) {*/
 
-@media (max-width: 768px) {
-  #imagen {
-    display: none; /* Oculta la imagen en móviles para evitar deformaciones */
-  }
 
-  #formulario {
-    width: 90%; /* Ocupa casi todo el ancho */
-    margin: 5% auto; /* Centra el formulario */
-    padding: 20px;
-  }
+@media (min-width: 768px) and (max-width: 1366px) {
 
-  #boton2 {
-    width: 100%; /* Botón ancho completo */
-    margin-left: 0;
-  }
-
-  .link {
-    margin-left: 0;
-  }
+#imagen {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  height: 100%;
+  width: 50%;
+  object-fit: cover;
 }
 
-
-@media (min-width: 769px) and (max-width: 1199px) {
-  #imagen {
-    width: 35%; /* Reduce el tamaño de la imagen */
-    padding-right: 0;
-  }
-
-  #formulario {
-    width: 60%; /* Más ancho que en escritorio */
-    margin: 8% auto;
-  }
-
-  #boton2 {
-    width: 70%;
-    margin-left: 0;
-  }
-
-  .link {
-    margin-left: 0;
-  }
-}
-
-
-@media (min-width: 1200px) {
-  #imagen {
-    width: auto;
-    padding-right: 40%;
-  }
-
-  #formulario {
-    width: 30%;
-    margin: 10%;
-  }
-}
-
- /* #registro {
-    height: 100%;
+ #registro {
+    height: 100vh;
     width: auto;
     text-align: center;
   }
 
   #formulario {
-    margin-top: 11%;
+    margin-top: 5%;
+  }
+
+  #boton2 {
+    width: 30%;
+    margin-left: 35%;
   }
 
   .link {
     text-align: center;
     justify-content: center;
     margin-left: 20%;
-  }*/
+  }
+}
 
 </style>
