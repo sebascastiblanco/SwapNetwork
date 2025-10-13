@@ -1,32 +1,74 @@
 <template>
   <ion-page>
+    <!-- Header con botones de navegación y acciones -->
     <ion-header>
       <ion-toolbar class="custom-toolbar">
+        <!-- Botón de regreso -->
         <ion-buttons slot="start">
-          <ion-back-button default-href="/"></ion-back-button>
+          <ion-back-button default-href="/" text="Atrás"></ion-back-button>
         </ion-buttons>
-        <ion-title>Explora</ion-title>
+        
+        <!-- Título de la página -->
+        <ion-title>Explorar</ion-title>
+        
+        <!-- Botón de actualizar en el extremo derecho -->
+        <ion-buttons slot="end">
+          <ion-button @click="refreshData">
+            <ion-icon slot="icon-only" :icon="refresh"></ion-icon>
+          </ion-button>
+        </ion-buttons>
       </ion-toolbar>
     </ion-header>
 
+    <!-- Contenido principal de la página -->
     <ion-content class="ion-padding custom-content">
-      <!-- Sección de introducción -->
+      <!-- SECCIÓN DE INTRODUCCIÓN: Muestra estadísticas generales -->
       <div class="intro-section">
-        <h2>Explora las tutorías y grupos disponibles</h2>
-        <p>Descubre nuevas oportunidades de aprendizaje y colaboración.</p>
+        <div class="intro-content">
+          <h2>Tutorías y Grupos de Estudio</h2>
+          <p>Encuentra y únete a actividades de aprendizaje colaborativo</p>
+          
+          <!-- Contenedor de estadísticas -->
+          <div class="stats-container">
+            <!-- Estadística de tutorías -->
+            <div class="stat-item">
+              <ion-icon :icon="school" class="stat-icon"></ion-icon>
+              <span class="stat-number">{{ tutorias.length }}</span>
+              <span class="stat-label">Tutorías</span>
+            </div>
+            
+            <!-- Estadística de grupos -->
+            <div class="stat-item">
+              <ion-icon :icon="people" class="stat-icon"></ion-icon>
+              <span class="stat-number">{{ grupos.length }}</span>
+              <span class="stat-label">Grupos</span>
+            </div>
+            
+            <!-- Estadística de actividades para hoy -->
+            <div class="stat-item">
+              <ion-icon :icon="calendar" class="stat-icon"></ion-icon>
+              <span class="stat-number">{{ actividadesHoyCount }}</span>
+              <span class="stat-label">Hoy</span>
+            </div>
+          </div>
+        </div>
       </div>
 
-      <!-- Filtros y búsqueda -->
+      <!-- SECCIÓN DE FILTROS Y BÚSQUEDA -->
       <div class="filters-section">
+        <!-- Barra de búsqueda -->
         <ion-searchbar 
-          placeholder="Buscar por materia, profesor..." 
+          placeholder="Buscar por tema, tutor, materia..." 
           v-model="searchQuery"
-          @ionInput="filterActivities"
+          @ionInput="handleSearch"
           class="custom-searchbar"
+          animated
+          clear-input
         ></ion-searchbar>
 
-        <div class="filter-buttons">
-          <ion-segment value="all" @ionChange="onFilterChange($event)">
+        <!-- Filtros por tipo de actividad -->
+        <div class="filter-row">
+          <ion-segment value="all" @ionChange="onFilterChange($event)" class="type-segment">
             <ion-segment-button value="all">
               <ion-label>Todos</ion-label>
             </ion-segment-button>
@@ -40,545 +82,711 @@
             </ion-segment-button>
           </ion-segment>
         </div>
-
-        <!-- Filtros adicionales -->
-        <div class="additional-filters">
-          <ion-chip 
-            v-for="subject in availableSubjects" 
-            :key="subject"
-            :outline="selectedSubject !== subject"
-            @click="toggleSubjectFilter(subject)"
-            class="subject-chip"
-          >
-            {{ getSubjectName(subject) }}
-          </ion-chip>
-        </div>
       </div>
 
-      <!-- Estado de carga -->
+      <!-- ESTADO DE CARGA: Se muestra mientras se obtienen datos -->
       <div class="loading-section" v-if="loading">
-        <ion-spinner name="crescent"></ion-spinner>
-        <p>Cargando actividades...</p>
+        <div class="loading-content">
+          <ion-spinner name="crescent" class="loading-spinner"></ion-spinner>
+          <p>Cargando actividades...</p>
+        </div>
       </div>
 
-      <!-- Lista de actividades -->
+      <!-- CONTENIDO PRINCIPAL: Se muestra cuando ya se cargaron los datos -->
       <div class="activities-section" v-else>
-        <!-- Mensaje cuando no hay resultados -->
-        <div class="empty-state" v-if="filteredActivities.length === 0">
-          <ion-icon :icon="search" class="empty-icon"></ion-icon>
-          <h3>No se encontraron actividades</h3>
-          <p>Intenta ajustar tus filtros de búsqueda</p>
+        <!-- ESTADO VACÍO: Cuando no hay actividades -->
+        <div class="empty-state" v-if="tutorias.length === 0 && grupos.length === 0">
+          <div class="empty-content">
+            <ion-icon :icon="searchOutline" class="empty-icon"></ion-icon>
+            <h3>No hay actividades disponibles</h3>
+            <p>No se han encontrado tutorías ni grupos de estudio</p>
+            <ion-button fill="solid" color="primary" @click="refreshData">
+              <ion-icon :icon="refresh" slot="start"></ion-icon>
+              Recargar
+            </ion-button>
+          </div>
         </div>
 
-        <!-- Lista de actividades -->
+        <!-- LISTA DE ACTIVIDADES: Contenido principal con datos reales -->
         <div class="activities-list" v-else>
-          <!-- Tutorías -->
-          <div class="activity-category" v-if="showTutoring">
-            <h3 class="category-title">
-              <ion-icon :icon="school" class="category-icon"></ion-icon>
-              Tutorías Disponibles
-              <span class="count-badge">{{ tutoringCount }}</span>
-            </h3>
+          <!-- SECCIÓN DE TUTORÍAS REALES -->
+          <div class="activity-category" v-if="showTutoring && tutoriasFiltradas.length > 0">
+            <div class="category-header">
+              <h3 class="category-title">
+                <ion-icon :icon="school" class="category-icon"></ion-icon>
+                Tutorías Disponibles
+                <span class="count-badge">{{ tutoriasFiltradas.length }}</span>
+              </h3>
+            </div>
             
-            <ion-card 
-              v-for="activity in filteredTutoring" 
-              :key="activity.id"
-              class="activity-card tutoring-card"
-              @click="viewActivityDetails(activity)"
-            >
-              <ion-card-content class="card-content">
-                <div class="activity-header">
-                  <div class="subject-badge" :class="activity.subject">
-                    {{ getSubjectName(activity.subject) }}
+            <!-- Grid de tarjetas de tutorías -->
+            <div class="activities-grid">
+              <ion-card 
+                v-for="tutoria in tutoriasFiltradas" 
+                :key="tutoria.id"
+                class="activity-card tutoring-card"
+                @click="verDetallesTutoria(tutoria)"
+              >
+                <ion-card-content class="card-content">
+                  <!-- Header de la tarjeta con tipo y estado -->
+                  <div class="activity-header">
+                    <div class="subject-badge">
+                      <ion-icon :icon="school" class="subject-icon"></ion-icon>
+                      Tutoría
+                    </div>
+                    <ion-badge color="success" class="status-badge">
+                      Disponible
+                    </ion-badge>
                   </div>
-                  <ion-badge :color="getStatusColor(activity)" class="status-badge">
-                    {{ getStatusText(activity) }}
-                  </ion-badge>
-                </div>
 
-                <h4 class="activity-title">{{ activity.title }}</h4>
-                
-                <div class="activity-details">
-                  <div class="detail-item">
-                    <ion-icon :icon="person" class="detail-icon"></ion-icon>
-                    <span><strong>Profesor:</strong> {{ activity.teacher }}</span>
-                  </div>
+                  <!-- Título de la tutoría -->
+                  <h4 class="activity-title">{{ tutoria.tema || 'Tutoría' }}</h4>
                   
-                  <div class="detail-item">
-                    <ion-icon :icon="calendar" class="detail-icon"></ion-icon>
-                    <span><strong>Fecha:</strong> {{ formatDate(activity.date) }}</span>
-                  </div>
-                  
-                  <div class="detail-item">
-                    <ion-icon :icon="time" class="detail-icon"></ion-icon>
-                    <span><strong>Horario:</strong> {{ formatTime(activity.date) }}</span>
-                  </div>
-                  
-                  <div class="detail-item">
-                    <ion-icon :icon="people" class="detail-icon"></ion-icon>
-                    <span><strong>Participantes:</strong> {{ activity.participants }}/{{ activity.maxParticipants }}</span>
-                  </div>
-                </div>
+                  <!-- Metadatos: tutor, fecha, hora, materia -->
+                  <div class="activity-meta">
+                    <div class="meta-item" v-if="tutoria.tutor">
+                      <ion-icon :icon="person" class="meta-icon"></ion-icon>
+                      <span class="meta-text"><strong>Tutor:</strong> {{ tutoria.tutor }}</span>
+                    </div>
+                    
+                    <div class="meta-item" v-if="tutoria.timespacep">
+                      <ion-icon :icon="calendar" class="meta-icon"></ion-icon>
+                      <span class="meta-text">{{ formatFecha(tutoria.timespacep) }}</span>
+                    </div>
+                    
+                    <div class="meta-item" v-if="tutoria.timespacep">
+                      <ion-icon :icon="time" class="meta-icon"></ion-icon>
+                      <span class="meta-text">{{ formatHora(tutoria.timespacep) }}</span>
+                    </div>
 
-                <p class="activity-description">{{ activity.description }}</p>
-
-                <div class="activity-footer">
-                  <div class="participants-avatars">
-                    <ion-avatar v-for="n in Math.min(3, activity.participants)" :key="n" class="small-avatar">
-                      <img :src="`https://i.pravatar.cc/150?img=${n + 10}`" alt="Participante" />
-                    </ion-avatar>
-                    <span class="more-participants" v-if="activity.participants > 3">
-                      +{{ activity.participants - 3 }} más
-                    </span>
+                    <div class="meta-item" v-if="tutoria.materia">
+                      <ion-icon :icon="book" class="meta-icon"></ion-icon>
+                      <span class="meta-text"><strong>Materia:</strong> {{ tutoria.materia }}</span>
+                    </div>
                   </div>
-                  
-                  <ion-button 
-                    fill="outline" 
-                    size="small" 
-                    @click.stop="joinActivity(activity)"
-                    :disabled="activity.participants >= activity.maxParticipants"
-                  >
-                    {{ activity.participants >= activity.maxParticipants ? 'Completo' : 'Unirse' }}
-                  </ion-button>
-                </div>
-              </ion-card-content>
-            </ion-card>
+
+                  <!-- Descripción de la tutoría -->
+                  <p class="activity-description" v-if="tutoria.descripcion">
+                    {{ tutoria.descripcion }}
+                  </p>
+                  <p class="activity-description" v-else>
+                    Tutoría disponible para unirse
+                  </p>
+
+                  <!-- Footer con participantes y botón de unirse -->
+                  <div class="activity-footer">
+                    <div class="participants-info">
+                      <!-- Avatares de participantes -->
+                      <div class="participants-avatars">
+                        <ion-avatar 
+                          v-for="n in Math.min(3, tutoria.participantes ? tutoria.participantes.length : 0)" 
+                          :key="n" 
+                          class="small-avatar"
+                        >
+                          <img :src="`https://i.pravatar.cc/150?img=${n + 10}`" alt="Participante" />
+                        </ion-avatar>
+                        <span class="more-participants" v-if="tutoria.participantes && tutoria.participantes.length > 3">
+                          +{{ tutoria.participantes.length - 3 }} más
+                        </span>
+                        <span class="no-participants" v-else-if="!tutoria.participantes || tutoria.participantes.length === 0">
+                          Sé el primero en unirte
+                        </span>
+                      </div>
+                      <!-- Contador de participantes -->
+                      <div class="participants-count">
+                        <ion-icon :icon="people" class="count-icon"></ion-icon>
+                        <span>{{ tutoria.participantes ? tutoria.participantes.length : 0 }} participantes</span>
+                      </div>
+                    </div>
+                    
+                    <!-- Botón para unirse a la tutoría -->
+                    <ion-button 
+                      fill="solid" 
+                      size="small" 
+                      @click.stop="unirseTutoria(tutoria)"
+                      :disabled="estaUnido(tutoria)"
+                      class="join-btn"
+                      :color="estaUnido(tutoria) ? 'success' : 'primary'"
+                    >
+                      <ion-icon 
+                        :icon="estaUnido(tutoria) ? checkmarkCircle : addCircle" 
+                        slot="start"
+                      ></ion-icon>
+                      {{ estaUnido(tutoria) ? 'Unido' : 'Unirse' }}
+                    </ion-button>
+                  </div>
+                </ion-card-content>
+              </ion-card>
+            </div>
           </div>
 
-          <!-- Grupos de Estudio -->
-          <div class="activity-category" v-if="showStudyGroups">
-            <h3 class="category-title">
-              <ion-icon :icon="people" class="category-icon"></ion-icon>
-              Grupos de Estudio
-              <span class="count-badge">{{ studyGroupCount }}</span>
-            </h3>
+          <!-- SECCIÓN DE GRUPOS DE ESTUDIO REALES -->
+          <div class="activity-category" v-if="showStudyGroups && gruposFiltrados.length > 0">
+            <div class="category-header">
+              <h3 class="category-title">
+                <ion-icon :icon="people" class="category-icon"></ion-icon>
+                Grupos de Estudio
+                <span class="count-badge">{{ gruposFiltrados.length }}</span>
+              </h3>
+            </div>
             
-            <ion-card 
-              v-for="activity in filteredStudyGroups" 
-              :key="activity.id"
-              class="activity-card studygroup-card"
-              @click="viewActivityDetails(activity)"
-            >
-              <ion-card-content class="card-content">
-                <div class="activity-header">
-                  <div class="subject-badge" :class="activity.subject">
-                    {{ getSubjectName(activity.subject) }}
+            <!-- Grid de tarjetas de grupos -->
+            <div class="activities-grid">
+              <ion-card 
+                v-for="grupo in gruposFiltrados" 
+                :key="grupo.id"
+                class="activity-card studygroup-card"
+                @click="verDetallesGrupo(grupo)"
+              >
+                <ion-card-content class="card-content">
+                  <!-- Header de la tarjeta con tipo y estado -->
+                  <div class="activity-header">
+                    <div class="subject-badge">
+                      <ion-icon :icon="people" class="subject-icon"></ion-icon>
+                      Grupo
+                    </div>
+                    <ion-badge color="success" class="status-badge">
+                      Disponible
+                    </ion-badge>
                   </div>
-                  <ion-badge :color="getStatusColor(activity)" class="status-badge">
-                    {{ getStatusText(activity) }}
-                  </ion-badge>
-                </div>
 
-                <h4 class="activity-title">{{ activity.title }}</h4>
-                
-                <div class="activity-details">
-                  <div class="detail-item">
-                    <ion-icon :icon="calendar" class="detail-icon"></ion-icon>
-                    <span><strong>Próxima sesión:</strong> {{ formatDate(activity.nextSession) }}</span>
-                  </div>
+                  <!-- Título del grupo -->
+                  <h4 class="activity-title">{{ grupo.nombre || 'Grupo de Estudio' }}</h4>
                   
-                  <div class="detail-item">
-                    <ion-icon :icon="time" class="detail-icon"></ion-icon>
-                    <span><strong>Horario:</strong> {{ formatTime(activity.nextSession) }}</span>
-                  </div>
-                  
-                  <div class="detail-item">
-                    <ion-icon :icon="people" class="detail-icon"></ion-icon>
-                    <span><strong>Miembros:</strong> {{ activity.participants }}/{{ activity.maxParticipants }}</span>
-                  </div>
-                  
-                  <div class="detail-item">
-                    <ion-icon :icon="location" class="detail-icon"></ion-icon>
-                    <span><strong>Lugar:</strong> {{ activity.location }}</span>
-                  </div>
-                </div>
+                  <!-- Metadatos: fecha, horario, materia, ubicación -->
+                  <div class="activity-meta">
+                    <div class="meta-item" v-if="grupo.timespacep">
+                      <ion-icon :icon="calendar" class="meta-icon"></ion-icon>
+                      <span class="meta-text">{{ formatFecha(grupo.timespacep) }}</span>
+                    </div>
+                    
+                    <div class="meta-item" v-if="grupo.horario">
+                      <ion-icon :icon="time" class="meta-icon"></ion-icon>
+                      <span class="meta-text"><strong>Horario:</strong> {{ grupo.horario }}</span>
+                    </div>
 
-                <p class="activity-description">{{ activity.description }}</p>
+                    <div class="meta-item" v-if="grupo.materia">
+                      <ion-icon :icon="book" class="meta-icon"></ion-icon>
+                      <span class="meta-text"><strong>Materia:</strong> {{ grupo.materia }}</span>
+                    </div>
 
-                <div class="tags-container">
-                  <ion-chip v-for="tag in activity.tags" :key="tag" size="small" class="topic-chip">
-                    {{ tag }}
-                  </ion-chip>
-                </div>
-
-                <div class="activity-footer">
-                  <div class="frequency-badge">
-                    <ion-icon :icon="repeat"></ion-icon>
-                    {{ activity.frequency }}
+                    <div class="meta-item" v-if="grupo.ubicacion">
+                      <ion-icon :icon="location" class="meta-icon"></ion-icon>
+                      <span class="meta-text"><strong>Lugar:</strong> {{ grupo.ubicacion }}</span>
+                    </div>
                   </div>
-                  
-                  <ion-button 
-                    fill="outline" 
-                    size="small" 
-                    @click.stop="joinActivity(activity)"
-                    :disabled="activity.participants >= activity.maxParticipants"
-                  >
-                    {{ activity.participants >= activity.maxParticipants ? 'Completo' : 'Unirse' }}
-                  </ion-button>
-                </div>
-              </ion-card-content>
-            </ion-card>
+
+                  <!-- Descripción del grupo -->
+                  <p class="activity-description" v-if="grupo.descripcion">
+                    {{ grupo.descripcion }}
+                  </p>
+                  <p class="activity-description" v-else>
+                    Grupo de estudio colaborativo
+                  </p>
+
+                  <!-- Footer con miembros y botón de unirse -->
+                  <div class="activity-footer">
+                    <div class="participants-info">
+                      <!-- Avatares de miembros -->
+                      <div class="participants-avatars">
+                        <ion-avatar 
+                          v-for="n in Math.min(3, grupo.miembros ? grupo.miembros.length : 0)" 
+                          :key="n" 
+                          class="small-avatar"
+                        >
+                          <img :src="`https://i.pravatar.cc/150?img=${n + 20}`" alt="Miembro" />
+                        </ion-avatar>
+                        <span class="more-participants" v-if="grupo.miembros && grupo.miembros.length > 3">
+                          +{{ grupo.miembros.length - 3 }} más
+                        </span>
+                        <span class="no-participants" v-else-if="!grupo.miembros || grupo.miembros.length === 0">
+                          Sé el primero en unirte
+                        </span>
+                      </div>
+                      <!-- Contador de miembros -->
+                      <div class="participants-count">
+                        <ion-icon :icon="people" class="count-icon"></ion-icon>
+                        <span>{{ grupo.miembros ? grupo.miembros.length : 0 }} miembros</span>
+                      </div>
+                    </div>
+                    
+                    <!-- Botón para unirse al grupo -->
+                    <ion-button 
+                      fill="solid" 
+                      size="small" 
+                      @click.stop="unirseGrupo(grupo)"
+                      :disabled="estaUnidoGrupo(grupo)"
+                      class="join-btn"
+                      :color="estaUnidoGrupo(grupo) ? 'success' : 'primary'"
+                    >
+                      <ion-icon 
+                        :icon="estaUnidoGrupo(grupo) ? checkmarkCircle : addCircle" 
+                        slot="start"
+                      ></ion-icon>
+                      {{ estaUnidoGrupo(grupo) ? 'Unido' : 'Unirse' }}
+                    </ion-button>
+                  </div>
+                </ion-card-content>
+              </ion-card>
+            </div>
           </div>
         </div>
       </div>
-
-      <!-- Modal de detalles de actividad -->
-      <ion-modal 
-        :is-open="detailModalOpen" 
-        @didDismiss="detailModalOpen = false"
-        class="activity-detail-modal"
-      >
-        <ActivityDetail 
-          :activity="selectedActivity"
-          @close="detailModalOpen = false"
-          @join="handleJoinActivity"
-          v-if="selectedActivity"
-        />
-      </ion-modal>
     </ion-content>
   </ion-page>
 </template>
 
 <script setup>
+// Importaciones de Vue y Ionic
 import { ref, computed, onMounted } from 'vue';
 import { 
-  IonPage, 
-  IonHeader, 
-  IonToolbar, 
-  IonTitle, 
-  IonContent, 
-  IonBackButton,
-  IonButtons,
-  IonCard,
-  IonCardContent,
-  IonSearchbar,
-  IonSegment,
-  IonSegmentButton,
-  IonLabel,
-  IonIcon,
-  IonBadge,
-  IonChip,
-  IonAvatar,
-  IonButton,
-  IonSpinner,
-  IonModal,
-  toastController
+  IonPage, IonHeader, IonToolbar, IonTitle, IonContent, IonBackButton,
+  IonButtons, IonCard, IonCardContent, IonSearchbar, IonSegment,
+  IonSegmentButton, IonLabel, IonIcon, IonBadge, IonAvatar, IonButton,
+  IonSpinner, toastController
 } from '@ionic/vue';
 import { 
-  school, 
-  people, 
-  calendar, 
-  time, 
-  person, 
-  location, 
-  search,
-  repeat
+  school, people, calendar, time, person, location, book,
+  searchOutline, refresh, addCircle, checkmarkCircle
 } from 'ionicons/icons';
 
-// Componente de detalles (simplificado)
-const ActivityDetail = {
-  props: ['activity'],
-  template: `
-    <div class="detail-modal-content">
-      <ion-toolbar>
-        <ion-title>Detalles</ion-title>
-        <ion-buttons slot="end">
-          <ion-button @click="$emit('close')">Cerrar</ion-button>
-        </ion-buttons>
-      </ion-toolbar>
-      <div class="detail-content" v-if="activity">
-        <h3>{{ activity.title }}</h3>
-        <p>{{ activity.description }}</p>
-        <!-- Más detalles aquí -->
-      </div>
-    </div>
-  `
-};
+// Importaciones de Firebase
+import { collection, onSnapshot, doc, updateDoc, arrayUnion } from "firebase/firestore";
+import { db, auth } from "@/firebaseDB";
+import { onAuthStateChanged } from "firebase/auth";
 
-// Variables reactivas
-const searchQuery = ref('');
-const filterType = ref('all');
-const selectedSubject = ref('');
-const loading = ref(true);
-const detailModalOpen = ref(false);
-const selectedActivity = ref(null);
+// VARIABLES REACTIVAS PARA EL ESTADO DE LA APLICACIÓN
+const searchQuery = ref('');        // Texto de búsqueda
+const filterType = ref('all');      // Tipo de filtro activo
+const loading = ref(true);          // Estado de carga
+const usuario = ref(null);          // Usuario autenticado
 
-// Datos de ejemplo
-const activities = ref([
-  {
-    id: 1,
-    type: 'tutoring',
-    title: 'Tutoría de Cálculo Diferencial',
-    subject: 'matematicas',
-    teacher: 'Prof. García',
-    date: '2024-01-15T14:00:00',
-    description: 'Repaso de límites y derivadas para el examen parcial',
-    participants: 3,
-    maxParticipants: 5,
-    status: 'available'
-  },
-  {
-    id: 2,
-    type: 'tutoring',
-    title: 'Tutoría de Física Mecánica',
-    subject: 'fisica',
-    teacher: 'Prof. Martínez',
-    date: '2024-01-16T16:00:00',
-    description: 'Leyes de Newton y aplicaciones prácticas',
-    participants: 5,
-    maxParticipants: 6,
-    status: 'almost_full'
-  },
-  {
-    id: 3,
-    type: 'studyGroup',
-    title: 'Grupo de Programación Web',
-    subject: 'programacion',
-    description: 'Estudio colaborativo de HTML, CSS y JavaScript',
-    nextSession: '2024-01-17T10:00:00',
-    participants: 4,
-    maxParticipants: 8,
-    location: 'Biblioteca Central',
-    frequency: 'Semanal',
-    tags: ['HTML', 'CSS', 'JavaScript', 'Frontend'],
-    status: 'available'
-  },
-  {
-    id: 4,
-    type: 'studyGroup',
-    title: 'Grupo de Literatura Española',
-    subject: 'literatura',
-    description: 'Análisis de obras del Siglo de Oro',
-    nextSession: '2024-01-18T15:00:00',
-    participants: 6,
-    maxParticipants: 6,
-    location: 'Sala de Estudio 3',
-    frequency: 'Quincenal',
-    tags: ['Literatura', 'Siglo de Oro', 'Análisis'],
-    status: 'full'
-  }
-]);
+// DATOS REALES DESDE FIREBASE
+const tutorias = ref([]);           // Lista de tutorías
+const grupos = ref([]);             // Lista de grupos de estudio
 
-// Materias disponibles
-const availableSubjects = ['matematicas', 'fisica', 'quimica', 'programacion', 'literatura'];
+// COMPUTED PROPERTIES PARA DATOS FILTRADOS Y CALCULADOS
 
-// Computed properties
-const filteredActivities = computed(() => {
-  let filtered = activities.value;
+/**
+ * Filtra las tutorías según el texto de búsqueda
+ */
+const tutoriasFiltradas = computed(() => {
+  let filtered = tutorias.value;
 
-  // Filtrar por tipo
-  if (filterType.value !== 'all') {
-    filtered = filtered.filter(activity => activity.type === filterType.value);
-  }
-
-  // Filtrar por materia
-  if (selectedSubject.value) {
-    filtered = filtered.filter(activity => activity.subject === selectedSubject.value);
-  }
-
-  // Filtrar por búsqueda
   if (searchQuery.value) {
     const query = searchQuery.value.toLowerCase();
-    filtered = filtered.filter(activity => 
-      activity.title.toLowerCase().includes(query) ||
-      activity.description.toLowerCase().includes(query) ||
-      (activity.teacher && activity.teacher.toLowerCase().includes(query)) ||
-      getSubjectName(activity.subject).toLowerCase().includes(query)
+    filtered = filtered.filter(tutoria => 
+      (tutoria.tema && tutoria.tema.toLowerCase().includes(query)) ||
+      (tutoria.tutor && tutoria.tutor.toLowerCase().includes(query)) ||
+      (tutoria.materia && tutoria.materia.toLowerCase().includes(query)) ||
+      (tutoria.descripcion && tutoria.descripcion.toLowerCase().includes(query))
     );
   }
 
   return filtered;
 });
 
-const filteredTutoring = computed(() => 
-  filteredActivities.value.filter(activity => activity.type === 'tutoring')
-);
+/**
+ * Filtra los grupos según el texto de búsqueda
+ */
+const gruposFiltrados = computed(() => {
+  let filtered = grupos.value;
 
-const filteredStudyGroups = computed(() => 
-  filteredActivities.value.filter(activity => activity.type === 'studyGroup')
-);
+  if (searchQuery.value) {
+    const query = searchQuery.value.toLowerCase();
+    filtered = filtered.filter(grupo => 
+      (grupo.nombre && grupo.nombre.toLowerCase().includes(query)) ||
+      (grupo.materia && grupo.materia.toLowerCase().includes(query)) ||
+      (grupo.descripcion && grupo.descripcion.toLowerCase().includes(query)) ||
+      (grupo.ubicacion && grupo.ubicacion.toLowerCase().includes(query))
+    );
+  }
 
-const tutoringCount = computed(() => filteredTutoring.value.length);
-const studyGroupCount = computed(() => filteredStudyGroups.value.length);
+  return filtered;
+});
 
+/**
+ * Calcula el número de actividades programadas para hoy
+ */
+const actividadesHoyCount = computed(() => {
+  const hoy = new Date();
+  hoy.setHours(0, 0, 0, 0);
+  
+  const tutoriasHoy = tutorias.value.filter(tutoria => {
+    if (!tutoria.timespacep) return false;
+    const fechaTutoria = tutoria.timespacep.toDate ? tutoria.timespacep.toDate() : new Date(tutoria.timespacep);
+    return fechaTutoria.toDateString() === hoy.toDateString();
+  });
+
+  const gruposHoy = grupos.value.filter(grupo => {
+    if (!grupo.timespacep) return false;
+    const fechaGrupo = grupo.timespacep.toDate ? grupo.timespacep.toDate() : new Date(grupo.timespacep);
+    return fechaGrupo.toDateString() === hoy.toDateString();
+  });
+
+  return tutoriasHoy.length + gruposHoy.length;
+});
+
+/**
+ * Determina si se deben mostrar las tutorías según el filtro activo
+ */
 const showTutoring = computed(() => 
   filterType.value === 'all' || filterType.value === 'tutoring'
 );
 
+/**
+ * Determina si se deben mostrar los grupos según el filtro activo
+ */
 const showStudyGroups = computed(() => 
   filterType.value === 'all' || filterType.value === 'studyGroup'
 );
 
-// Métodos
+// MÉTODOS DE LA APLICACIÓN
+
+/**
+ * Maneja el cambio de filtro en el segment control
+ */
 const onFilterChange = (ev) => {
   filterType.value = ev.detail.value;
 };
 
-const toggleSubjectFilter = (subject) => {
-  selectedSubject.value = selectedSubject.value === subject ? '' : subject;
+/**
+ * Maneja la búsqueda en tiempo real
+ */
+const handleSearch = () => {
+  // La búsqueda se maneja automáticamente por los computed properties
 };
 
-const filterActivities = () => {
-  // La búsqueda se maneja automáticamente por el computed property
-};
-
-const getSubjectName = (subjectKey) => {
-  const subjects = {
-    matematicas: 'Matemáticas',
-    fisica: 'Física',
-    quimica: 'Química',
-    biologia: 'Biología',
-    historia: 'Historia',
-    literatura: 'Literatura',
-    ingles: 'Inglés',
-    programacion: 'Programación'
-  };
-  return subjects[subjectKey] || subjectKey;
-};
-
-const formatDate = (dateString) => {
-  const date = new Date(dateString);
-  return date.toLocaleDateString('es-ES', {
+/**
+ * Formatea una fecha timestamp a formato legible
+ */
+const formatFecha = (timestamp) => {
+  if (!timestamp) return "Fecha por definir";
+  const date = timestamp.toDate ? timestamp.toDate() : new Date(timestamp);
+  return date.toLocaleDateString("es-CO", { 
     weekday: 'long',
-    year: 'numeric',
-    month: 'long',
-    day: 'numeric'
+    year: 'numeric', 
+    month: 'long', 
+    day: 'numeric' 
   });
 };
 
-const formatTime = (dateString) => {
-  const date = new Date(dateString);
-  return date.toLocaleTimeString('es-ES', {
-    hour: '2-digit',
-    minute: '2-digit'
+/**
+ * Formatea una hora timestamp a formato legible
+ */
+const formatHora = (timestamp) => {
+  if (!timestamp) return "Hora por definir";
+  const date = timestamp.toDate ? timestamp.toDate() : new Date(timestamp);
+  return date.toLocaleTimeString("es-CO", { 
+    hour: '2-digit', 
+    minute: '2-digit' 
   });
 };
 
-const getStatusColor = (activity) => {
-  if (activity.status === 'full') return 'danger';
-  if (activity.status === 'almost_full') return 'warning';
-  return 'success';
+/**
+ * Verifica si el usuario actual está unido a una tutoría
+ */
+const estaUnido = (tutoria) => {
+  if (!usuario.value || !tutoria.participantes) return false;
+  return tutoria.participantes.some(p => p.uid === usuario.value.uid);
 };
 
-const getStatusText = (activity) => {
-  if (activity.participants >= activity.maxParticipants) return 'Completo';
-  if (activity.participants >= activity.maxParticipants - 1) return 'Casi lleno';
-  return 'Disponible';
+/**
+ * Verifica si el usuario actual está unido a un grupo
+ */
+const estaUnidoGrupo = (grupo) => {
+  if (!usuario.value || !grupo.miembros) return false;
+  return grupo.miembros.some(m => m.uid === usuario.value.uid);
 };
 
-const viewActivityDetails = (activity) => {
-  selectedActivity.value = activity;
-  detailModalOpen.value = true;
+// MÉTODOS DE FIREBASE
+
+/**
+ * Carga las tutorías desde Firebase en tiempo real
+ */
+const cargarTutorias = () => {
+  const refTut = collection(db, "tutoria");
+  onSnapshot(refTut, (snapshot) => {
+    tutorias.value = snapshot.docs.map((doc) => ({
+      id: doc.id,
+      ...doc.data()
+    }));
+    console.log('Tutorías cargadas:', tutorias.value.length);
+  });
 };
 
-const joinActivity = async (activity) => {
-  if (activity.participants < activity.maxParticipants) {
-    activity.participants++;
-    
+/**
+ * Carga los grupos de estudio desde Firebase en tiempo real
+ */
+const cargarGrupos = () => {
+  const refGrupo = collection(db, "grupoestudio");
+  onSnapshot(refGrupo, (snapshot) => {
+    grupos.value = snapshot.docs.map((doc) => ({
+      id: doc.id,
+      ...doc.data()
+    }));
+    console.log('Grupos cargados:', grupos.value.length);
+  });
+};
+
+/**
+ * Permite al usuario unirse a una tutoría
+ */
+const unirseTutoria = async (tutoria) => {
+  try {
+    // Verificar autenticación
+    if (!usuario.value) {
+      const toast = await toastController.create({
+        message: "Debes iniciar sesión para unirte a una tutoría",
+        duration: 3000,
+        color: 'warning',
+        position: 'top'
+      });
+      await toast.present();
+      return;
+    }
+
+    // Verificar si ya está unido
+    if (estaUnido(tutoria)) {
+      const toast = await toastController.create({
+        message: "Ya estás unido a esta tutoría",
+        duration: 2000,
+        color: 'success',
+        position: 'top'
+      });
+      await toast.present();
+      return;
+    }
+
+    // Actualizar documento en Firebase
+    const docRef = doc(db, "tutoria", tutoria.id);
+    await updateDoc(docRef, {
+      participantes: arrayUnion({
+        uid: usuario.value.uid,
+        email: usuario.value.email,
+        nombre: usuario.value.displayName || usuario.value.email.split('@')[0]
+      })
+    });
+
+    // Mostrar confirmación
     const toast = await toastController.create({
-      message: `Te has unido a "${activity.title}"`,
-      duration: 2000,
+      message: `¡Te uniste a la tutoría: ${tutoria.tema || 'Tutoría'}!`,
+      duration: 3000,
       color: 'success',
+      position: 'top'
+    });
+    await toast.present();
+
+  } catch (error) {
+    console.error("Error al unirse a la tutoría:", error);
+    const toast = await toastController.create({
+      message: "Error al unirse a la tutoría",
+      duration: 3000,
+      color: 'danger',
       position: 'top'
     });
     await toast.present();
   }
 };
 
-const handleJoinActivity = (activity) => {
-  joinActivity(activity);
-  detailModalOpen.value = false;
+/**
+ * Permite al usuario unirse a un grupo de estudio
+ */
+const unirseGrupo = async (grupo) => {
+  try {
+    // Verificar autenticación
+    if (!usuario.value) {
+      const toast = await toastController.create({
+        message: "Debes iniciar sesión para unirte a un grupo",
+        duration: 3000,
+        color: 'warning',
+        position: 'top'
+      });
+      await toast.present();
+      return;
+    }
+
+    // Verificar si ya está unido
+    if (estaUnidoGrupo(grupo)) {
+      const toast = await toastController.create({
+        message: "Ya estás unido a este grupo",
+        duration: 2000,
+        color: 'success',
+        position: 'top'
+      });
+      await toast.present();
+      return;
+    }
+
+    // Actualizar documento en Firebase
+    const docRef = doc(db, "grupoestudio", grupo.id);
+    await updateDoc(docRef, {
+      miembros: arrayUnion({
+        uid: usuario.value.uid,
+        email: usuario.value.email,
+        nombre: usuario.value.displayName || usuario.value.email.split('@')[0]
+      })
+    });
+
+    // Mostrar confirmación
+    const toast = await toastController.create({
+      message: `¡Te uniste al grupo: ${grupo.nombre || 'Grupo de estudio'}!`,
+      duration: 3000,
+      color: 'success',
+      position: 'top'
+    });
+    await toast.present();
+
+  } catch (error) {
+    console.error("Error al unirse al grupo:", error);
+    const toast = await toastController.create({
+      message: "Error al unirse al grupo",
+      duration: 3000,
+      color: 'danger',
+      position: 'top'
+    });
+    await toast.present();
+  }
 };
 
-// Simular carga de datos
-onMounted(() => {
+/**
+ * Navega a los detalles de una tutoría (por implementar)
+ */
+const verDetallesTutoria = (tutoria) => {
+  // Implementar navegación a detalles de tutoría
+  console.log('Ver detalles tutoría:', tutoria);
+};
+
+/**
+ * Navega a los detalles de un grupo (por implementar)
+ */
+const verDetallesGrupo = (grupo) => {
+  // Implementar navegación a detalles de grupo
+  console.log('Ver detalles grupo:', grupo);
+};
+
+/**
+ * Recarga los datos de la aplicación
+ */
+const refreshData = async () => {
+  loading.value = true;
+  // Recargar datos
   setTimeout(() => {
     loading.value = false;
-  }, 1000);
+    toastController.create({
+      message: 'Datos actualizados',
+      duration: 1000,
+      color: 'success',
+      position: 'top'
+    }).then(toast => toast.present());
+  }, 500);
+};
+
+// INICIALIZACIÓN DE LA APLICACIÓN
+onMounted(() => {
+  // Cargar datos reales de Firebase
+  cargarTutorias();
+  cargarGrupos();
+  
+  // Detectar usuario autenticado
+  onAuthStateChanged(auth, (user) => {
+    usuario.value = user;
+    if (user) {
+      console.log("Usuario activo:", user.email);
+    }
+  });
+
+  // Ocultar loading después de cargar
+  setTimeout(() => {
+    loading.value = false;
+  }, 2000);
 });
 </script>
 
 <style scoped>
-/* Variables de colores */
-:root {
-  --primary-green: #2E7D32;
-  --light-green: #4CAF50;
-  --dark-green: #1B5E20;
-  --accent-green: #388E3C;
-  --white: #FFFFFF;
-  --light-gray: #F8F9FA;
-  --medium-gray: #E0E0E0;
-  --dark-gray: #424242;
-  --text-gray: #616161;
-}
+/* ESTILOS GENERALES DE LA APLICACIÓN */
 
+/* Toolbar personalizado con gradiente */
 .custom-toolbar {
-  --background: var(--primary-green);
-  --color: var(--white);
+  --background: linear-gradient(135deg, #2E7D32 0%, #4CAF50 100%);
+  --color: white;
 }
 
-.custom-content {
-  --background: var(--light-gray);
-}
-
-/* Sección de introducción */
+/* Sección de introducción con estadísticas */
 .intro-section {
+  background: linear-gradient(135deg, #E8F5E8 0%, #F1F8E9 100%);
+  border-radius: 16px;
+  padding: 1.5rem;
+  margin-bottom: 1.5rem;
   text-align: center;
-  margin-bottom: 1.5rem;
-  padding: 0 1rem;
 }
 
-.intro-section h2 {
-  color: var(--primary-green);
-  font-weight: 600;
+.intro-content h2 {
+  color: #2E7D32;
+  font-weight: 700;
   margin-bottom: 0.5rem;
-  font-size: 1.4rem;
+  font-size: 1.5rem;
 }
 
-.intro-section p {
-  color: var(--text-gray);
-  line-height: 1.5;
-  font-size: 0.95rem;
-}
-
-/* Filtros */
-.filters-section {
+.intro-content p {
+  color: #616161;
   margin-bottom: 1.5rem;
+  font-size: 1rem;
 }
 
-.custom-searchbar {
-  --background: var(--white);
-  --border-radius: 8px;
-  --box-shadow: 0 2px 6px rgba(0,0,0,0.1);
-  margin-bottom: 1rem;
-}
-
-.filter-buttons {
-  margin-bottom: 1rem;
-}
-
-.additional-filters {
+/* Contenedor de estadísticas */
+.stats-container {
   display: flex;
-  flex-wrap: wrap;
-  gap: 0.5rem;
-  justify-content: center;
+  justify-content: space-around;
+  max-width: 400px;
+  margin: 0 auto;
 }
 
-.subject-chip {
-  --background: var(--white);
-  --color: var(--primary-green);
-  --background-activated: var(--primary-green);
-  --color-activated: var(--white);
+.stat-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
-/* Estado de carga */
+.stat-icon {
+  font-size: 1.5rem;
+  color: #2E7D32;
+  margin-bottom: 0.5rem;
+}
+
+.stat-number {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #2E7D32;
+  line-height: 1;
+}
+
+.stat-label {
+  font-size: 0.8rem;
+  color: #616161;
+  margin-top: 0.25rem;
+}
+
+/* Fila de filtros */
+.filter-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.type-segment {
+  flex: 1;
+}
+
+/* Sección de carga */
 .loading-section {
   text-align: center;
   padding: 3rem 1rem;
 }
 
-.loading-section p {
-  color: var(--text-gray);
+.loading-content p {
+  color: #616161;
   margin-top: 1rem;
 }
 
@@ -586,65 +794,70 @@ onMounted(() => {
 .empty-state {
   text-align: center;
   padding: 3rem 1rem;
-  color: var(--text-gray);
+  color: #616161;
 }
 
 .empty-icon {
   font-size: 3rem;
-  color: var(--medium-gray);
+  color: #E0E0E0;
   margin-bottom: 1rem;
 }
 
-/* Lista de actividades */
-.activities-section {
-  max-width: 800px;
-  margin: 0 auto;
+/* Grid de actividades */
+.activities-grid {
+  display: grid;
+  gap: 1rem;
 }
 
-.activity-category {
-  margin-bottom: 2rem;
+/* Header de categoría */
+.category-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
 }
 
 .category-title {
   display: flex;
   align-items: center;
-  color: var(--dark-gray);
-  margin-bottom: 1rem;
+  color: #424242;
   font-size: 1.2rem;
 }
 
 .category-icon {
   margin-right: 0.5rem;
-  color: var(--primary-green);
+  color: #2E7D32;
 }
 
+/* Badge de contador */
 .count-badge {
-  background: var(--primary-green);
-  color: var(--white);
+  background: #2E7D32;
+  color: white;
   padding: 0.25rem 0.75rem;
   border-radius: 12px;
   font-size: 0.8rem;
   margin-left: 0.5rem;
 }
 
-/* Tarjetas de actividad */
+/* Tarjetas de actividades */
 .activity-card {
-  margin-bottom: 1rem;
-  border-radius: 12px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  border-radius: 16px;
+  overflow: hidden;
   transition: all 0.3s ease;
-  border-left: 4px solid var(--primary-green);
+  border: none;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 }
 
 .activity-card:hover {
   transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
 }
 
 .card-content {
   padding: 1.5rem;
 }
 
+/* Header de la tarjeta */
 .activity-header {
   display: flex;
   justify-content: space-between;
@@ -653,75 +866,72 @@ onMounted(() => {
 }
 
 .subject-badge {
-  padding: 0.4rem 0.8rem;
-  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 0.75rem;
+  border-radius: 8px;
   font-size: 0.8rem;
   font-weight: 600;
-  color: var(--white);
+  color: white;
+  background: #2E7D32;
 }
 
-.subject-badge.matematicas { background: #FF6B6B; }
-.subject-badge.fisica { background: #4ECDC4; }
-.subject-badge.quimica { background: #45B7D1; }
-.subject-badge.programacion { background: #96CEB4; }
-.subject-badge.literatura { background: #FFBE0B; }
-
-.status-badge {
-  font-size: 0.7rem;
+.subject-icon {
+  font-size: 0.9rem;
 }
 
+/* Título de la actividad */
 .activity-title {
-  color: var(--dark-gray);
+  color: #212121;
   margin-bottom: 1rem;
   font-size: 1.1rem;
   font-weight: 600;
+  line-height: 1.4;
 }
 
-.activity-details {
+/* Metadatos de la actividad */
+.activity-meta {
   margin-bottom: 1rem;
 }
 
-.detail-item {
+.meta-item {
   display: flex;
   align-items: center;
   margin-bottom: 0.5rem;
-  font-size: 0.9rem;
-  color: var(--text-gray);
+  font-size: 0.85rem;
+  color: #616161;
 }
 
-.detail-icon {
+.meta-icon {
   margin-right: 0.5rem;
-  color: var(--primary-green);
+  color: #2E7D32;
   font-size: 0.9rem;
+  min-width: 16px;
 }
 
+/* Descripción de la actividad */
 .activity-description {
-  color: var(--text-gray);
+  color: #616161;
   font-size: 0.9rem;
   line-height: 1.5;
   margin-bottom: 1rem;
 }
 
-.tags-container {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.5rem;
-  margin-bottom: 1rem;
-}
-
-.topic-chip {
-  --background: var(--light-gray);
-  --color: var(--dark-gray);
-  font-size: 0.7rem;
-}
-
+/* Footer de la actividad */
 .activity-footer {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-top: 1rem;
   padding-top: 1rem;
-  border-top: 1px solid var(--medium-gray);
+  border-top: 1px solid #E0E0E0;
+}
+
+.participants-info {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  flex: 1;
 }
 
 .participants-avatars {
@@ -733,64 +943,45 @@ onMounted(() => {
 .small-avatar {
   width: 28px;
   height: 28px;
-  border: 2px solid var(--white);
+  border: 2px solid white;
   box-shadow: 0 1px 3px rgba(0,0,0,0.2);
 }
 
-.more-participants {
+.more-participants,
+.no-participants {
   font-size: 0.8rem;
-  color: var(--text-gray);
+  color: #616161;
   margin-left: 0.5rem;
 }
 
-.frequency-badge {
+.participants-count {
   display: flex;
   align-items: center;
-  gap: 0.25rem;
-  background: var(--light-gray);
-  padding: 0.4rem 0.8rem;
-  border-radius: 6px;
-  font-size: 0.8rem;
-  color: var(--text-gray);
+  gap: 0.5rem;
+  font-size: 0.85rem;
+  color: #616161;
 }
 
-/* Modal */
-.detail-modal-content {
-  background: var(--white);
-  height: 100%;
+.count-icon {
+  font-size: 1rem;
+  color: #2E7D32;
 }
 
-/* Responsive */
+/* Botón de unirse */
+.join-btn {
+  --border-radius: 8px;
+}
+
+/* RESPONSIVE DESIGN */
 @media (max-width: 768px) {
-  .intro-section {
-    margin-bottom: 1rem;
-  }
-  
-  .card-content {
-    padding: 1rem;
-  }
-  
   .activity-footer {
     flex-direction: column;
     gap: 1rem;
     align-items: stretch;
   }
   
-  .additional-filters {
-    justify-content: flex-start;
-    overflow-x: auto;
-    padding-bottom: 0.5rem;
+  .join-btn {
+    width: 100%;
   }
-}
-
-/* Estilos para elementos de Ionic */
-ion-segment {
-  --background: var(--white);
-}
-
-ion-segment-button {
-  --color: var(--text-gray);
-  --color-checked: var(--primary-green);
-  --indicator-color: var(--primary-green);
 }
 </style>

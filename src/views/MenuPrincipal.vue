@@ -1,67 +1,30 @@
 <template>
-  <!-- 
-    ===============================================
-    ESTRUCTURA PRINCIPAL DE LA PÁGINA
-    ===============================================
-    IonPage: Contenedor principal de la página Ionic
-    IonHeader: Cabecera de la aplicación
-    IonContent: Área de contenido principal
-  -->
   <ion-page>
-    
-    <!-- 
-      CABECERA DE LA APLICACIÓN 
-      Contiene el logo y título de la plataforma
-    -->
     <ion-header>
       <ion-toolbar class="custom-toolbar">
         <div class="logo-container">
-          <!-- Icono de la escuela -->
           <ion-icon :icon="school" class="logo-icon"></ion-icon>
-          <!-- Título de la plataforma -->
           <ion-title>SwapNetwork</ion-title>
         </div>
       </ion-toolbar>
     </ion-header>
 
-    <!-- 
-      CONTENIDO PRINCIPAL
-      Aquí va todo el contenido de la página principal
-    -->
-    <ion-content class="ion-padding custom-content">
-      
-      <!-- 
-        CONTENEDOR PRINCIPAL CENTRADO
-        Este div centra todo el contenido vertical y horizontalmente
-      -->
+    <ion-content class="ion-padding custom-content" scroll-y="true">
       <div class="main-container">
-        
-        <!-- 
-          SECCIÓN DE BIENVENIDA
-          Muestra el mensaje de bienvenida a los usuarios
-        -->
+        <!-- Sección de bienvenida -->
         <div class="welcome-section">
           <h2>Bienvenida a SwapNetwork</h2>
           <p>Selecciona una opción para continuar con tu experiencia educativa</p>
         </div>
 
-        <!-- 
-          GRID DE TARJETAS/MODULOS PRINCIPALES
-          Contiene los 3 módulos principales de la aplicación
-        -->
+        <!-- Botones del menú -->
         <div class="menu-grid">
-          
-          <!-- 
-            TARJETA 1: CONECTA Y CREA
-            Módulo para conexiones y proyectos colaborativos
-          -->
+          <!-- Conecta y Crea -->
           <ion-card class="menu-card connect-card" button @click="$router.push('/conecta')">
             <ion-card-content class="card-content">
-              <!-- Contenedor del icono -->
               <div class="card-icon-container">
                 <ion-icon :icon="peopleCircle" class="card-icon"></ion-icon>
               </div>
-              <!-- Texto de la tarjeta -->
               <div class="card-text">
                 <h3>Conecta y Crea</h3>
                 <p>Establece conexiones y desarrolla proyectos colaborativos</p>
@@ -69,10 +32,7 @@
             </ion-card-content>
           </ion-card>
 
-          <!-- 
-            TARJETA 2: ZONA SWAP  
-            Módulo principal de intercambio de conocimientos
-          -->
+          <!-- Zona Swap -->
           <ion-card class="menu-card swap-card" button @click="$router.push('/zonaswap')">
             <ion-card-content class="card-content">
               <div class="card-icon-container">
@@ -85,10 +45,7 @@
             </ion-card-content>
           </ion-card>
 
-          <!-- 
-            TARJETA 3: EXPLORA
-            Módulo para descubrir contenidos y oportunidades
-          -->
+          <!-- Explora -->
           <ion-card class="menu-card explore-card" button @click="$router.push('/explora')">
             <ion-card-content class="card-content">
               <div class="card-icon-container">
@@ -102,13 +59,27 @@
           </ion-card>
         </div>
 
-        <!-- 
-          FOOTER INSTITUCIONAL
-          Información oficial y marca de la plataforma
-        -->
+        <!-- FOOTER COMPLETO con copyright institucional -->
         <div class="institutional-footer">
-          <p>Plataforma educativa oficial de intercambio de conocimientos</p>
-          <p class="institutional-logo">SwapNetwork Educación</p>
+          <div class="footer-content">
+            <div class="footer-text">
+              <p class="footer-description"></p>
+              <p class="institutional-logo"></p>
+              <p class="university-text"></p>
+              
+              <!-- TEXTO DE COPYRIGHT EN NEGRO SÓLIDO -->
+              <p class="copyright-text">©2025 Universidad de Cundinamarca. Todos los derechos reservados.</p>
+            </div>
+            <div class="university-logo-container">
+              <div class="university-logo">
+                <div class="logo-symbol">UC</div>
+                <div class="logo-text">
+                  <span class="logo-title">Universidad</span>
+                  <span class="logo-subtitle">de Cundinamarca</span>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </ion-content>
@@ -116,14 +87,6 @@
 </template>
 
 <script setup>
-/*
-===============================================
-IMPORTACIONES DE COMPONENTES IONIC
-===============================================
-Estas son las dependencias necesarias para que funcione la página
-*/
-
-// Componentes de Ionic Vue que usamos en esta página
 import { 
   IonPage, 
   IonHeader, 
@@ -134,71 +97,42 @@ import {
   IonCardContent, 
   IonIcon 
 } from '@ionic/vue';
-
-// Iconos de Ionicons que utilizamos en la interfaz
 import { 
   swapHorizontal, 
   peopleCircle, 
   compass, 
-  school,
-  library
+  school
 } from 'ionicons/icons';
-
-/*
-===============================================
-EXPLICACIÓN DE LAS RUTAS:
-===============================================
-- '/conecta': Página de conexiones y proyectos colaborativos
-- '/zonaswap': Página principal de intercambio de conocimientos  
-- '/explora': Página para descubrir nuevos contenidos
-
-Para agregar nuevas rutas, debes:
-1. Crear el componente en /src/views/
-2. Agregar la ruta en /src/router/index.js
-3. Actualizar el @click aquí con la nueva ruta
-*/
 </script>
 
 <style scoped>
-/* 
-===============================================
-VARIABLES GLOBALES Y CONFIGURACIÓN
-===============================================
-Estas variables definen la paleta de colores y estilos base
-*/
-
+/*VARIABLES DE COLORES VERDES*/
 :root {
-  /* PALETA DE COLORES VERDES */
-  --primary-green: #1a7431;        /* Verde principal para elementos importantes */
-  --light-green: #2e8b57;          /* Verde claro para hover y efectos */
-  --dark-green: #145c2c;           /* Verde oscuro para textos destacados */
-  --accent-green: #34a853;         /* Verde de acento para elementos especiales */
-  
-  /* COLORES NEUTROS */
-  --white: #FFFFFF;                /* Blanco puro para textos sobre verde */
-  --light-gray: #f8faf9;           /* Fondo principal con tono verdoso sutil */
-  --medium-gray: #e8f5e8;          /* Bordes y separadores con tono verde */
-  --dark-gray: #2d3748;            /* Texto principal oscuro */
-  --text-gray: #4a5568;            /* Texto secundario gris */
-  
-  /* SOMBRAS CON TONO VERDE */
-  --shadow-light: rgba(26, 116, 49, 0.15);    /* Sombra suave para tarjetas */
-  --shadow-medium: rgba(26, 116, 49, 0.25);   /* Sombra media para hover */
-  --shadow-strong: rgba(26, 116, 49, 0.3);    /* Sombra fuerte para cabecera */
+  --primary-green: #1a7431;
+  --light-green: #2e8b57;
+  --dark-green: #145c2c;
+  --accent-green: #34a853;
+  --white: #FFFFFF;
+  --light-gray: #f8faf9;
+  --medium-gray: #e8f5e8;
+  --dark-gray: #2d3748;
+  --text-gray: #4a5568;
+  --text-black: #000000;
+  --shadow-light: rgba(26, 116, 49, 0.15);
+  --shadow-medium: rgba(26, 116, 49, 0.25);
+  --shadow-strong: rgba(26, 116, 49, 0.3);
 }
 
 /* 
-===============================================
-CABECERA DE LA APLICACIÓN
-===============================================
-Estilos para la barra superior con logo y título
-*/
+   CABECERA
+   */
 .custom-toolbar {
-  --background: #1a7431;           /* Color de fondo verde */
-  --color: white;                  /* Color del texto blanco */
-  background: #1a7431;             /* Backup del color de fondo */
-  box-shadow: 0 2px 12px var(--shadow-strong); /* Sombra verde */
-  padding: 0 16px;                 /* Espaciado interno horizontal */
+  --background: #1a7431;
+  --color: white;
+  background: #1a7431;
+  box-shadow: 0 2px 12px var(--shadow-strong);
+  position: relative;
+  z-index: 1000;
 }
 
 .logo-container {
@@ -206,251 +140,245 @@ Estilos para la barra superior con logo y título
   align-items: center;
   justify-content: center;
   width: 100%;
-  padding: 8px 0;                  /* Espaciado vertical interno */
 }
 
 .logo-icon {
   font-size: 24px;
-  margin-right: 12px;
+  margin-right: 5px;
+  margin-left: 40px; /* Esto empuja el icono a la derecha */
   color: white;
 }
 
-/* 
-===============================================
-CONTENIDO PRINCIPAL
-===============================================
-Estilos para el área de contenido scrollable
-*/
+/* CONTENIDO PRINCIPAL */
 .custom-content {
-  --background: #f8faf9;           /* Color de fondo de la página */
-  background: #f8faf9;             /* Backup del color de fondo */
+  --background: #f8faf9;
+  background: #f8faf9;
   display: flex;
   flex-direction: column;
-  min-height: 100vh;               /* Altura mínima de toda la pantalla */
+  min-height: 100vh;
+  overflow-y: auto;
+  position: relative;
 }
 
 .main-container {
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
-  flex: 1;                         /* Ocupa todo el espacio disponible */
+  justify-content: flex-start;
+  flex: 1;
   width: 100%;
-  padding: 2rem 0;                 /* Espaciado vertical GENEROSO */
-  min-height: calc(100vh - 120px); /* Altura mínima menos la cabecera */
+  padding: 2rem 0 3rem 0;
+  min-height: auto;
 }
 
-/* 
-===============================================
-SECCIÓN DE BIENVENIDA
-===============================================
-Estilos para el texto de bienvenida bajo la cabecera
-*/
+/* SECCIÓN DE BIENVENIDA */
 .welcome-section {
   text-align: center;
-  margin: 0 0 3rem 0;              /* Margen inferior generoso */
-  padding: 0 2rem;                 /* Espaciado horizontal INTERNO */
+  margin: 0 0 3rem 0;
+  padding: 0 2rem;
   max-width: 600px;
   width: 100%;
 }
 
 .welcome-section h2 {
-  color: #1a7431;                  /* Verde para el título */
+  color: #1a7431;
   font-weight: 600;
-  margin-bottom: 1rem;             /* Espacio entre título y párrafo */
+  margin-bottom: 1rem;
   font-size: 1.5rem;
 }
 
 .welcome-section p {
-  color: #4a5568;                  /* Gris para texto descriptivo */
+  color: #4a5568;
   font-size: 1rem;
-  line-height: 1.6;                /* Interlineado cómodo para lectura */
+  line-height: 1.6;
   margin: 0;
 }
 
-/* 
-===============================================
-GRID DE TARJETAS/MÓDULOS
-===============================================
-Estilos para las 3 tarjetas principales de la aplicación
-*/
+/*TARJETAS DEL MENÚ */
 .menu-grid {
   display: grid;
-  grid-template-columns: repeat(3, 1fr); /* 3 columnas en desktop */
-  gap: 2rem;                         /* Espacio ENTRE tarjetas aumentado */
-  margin-bottom: 3rem;               /* Margen inferior generoso */
-  max-width: 1100px;                 /* Ancho máximo del grid */
+  grid-template-columns: repeat(3, 1fr);
+  gap: 2rem;
+  margin-bottom: 3rem;
+  max-width: 1100px;
   width: 100%;
-  padding: 0 2rem;                   /* Espaciado horizontal INTERNO */
+  padding: 0 2rem;
 }
 
-/* 
-  TARJETA BASE - Estilos comunes para todas las tarjetas
-  Cada tarjeta representa un módulo de la aplicación
-*/
 .menu-card {
   margin: 0;
-  border-radius: 16px;              /* Bordes redondeados modernos */
-  box-shadow: 0 4px 12px var(--shadow-light); /* Sombra suave verde */
-  transition: all 0.3s ease;        /* Transición suave para hover */
-  border: 1px solid var(--medium-gray); /* Borde sutil verde claro */
-  background: white;
-  height: 280px;                    /* Altura FIJA para consistencia */
+  border-radius: 16px;
+  box-shadow: 0 4px 12px var(--shadow-light);
+  transition: all 0.3s ease;
+  border: 1px solid var(--medium-gray);
+  background: rgb(208, 231, 205);
+  height: 380px;
+  min-height: 380px;
   display: flex;
   flex-direction: column;
-  min-height: 280px;                /* Altura mínima garantizada */
+  overflow: visible;
 }
 
-/* Efecto hover - cuando el usuario pasa el mouse sobre la tarjeta */
 .menu-card:hover {
-  transform: translateY(-5px);      /* Efecto de levitación */
-  box-shadow: 0 8px 20px var(--shadow-medium); /* Sombra más pronunciada */
-  border-color: var(--light-green); /* Borde verde en hover */
+  transform: translateY(-5px);
+  box-shadow: 0 8px 20px var(--shadow-medium);
+  border-color: var(--light-green);
 }
 
-/* 
-  CONTENIDO INTERNO DE LAS TARJETAS
-  Organización vertical: icono + título + descripción
-*/
 .card-content {
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 2.5rem 2rem;             /* Espaciado interno GENEROSO */
+  padding: 2.5rem 2rem;
   text-align: center;
   flex: 1;
-  justify-content: center;          /* Centrado vertical del contenido */
+  justify-content: flex-start;
   height: 100%;
+  gap: 1.5rem;
 }
 
-/* 
-  CONTENEDOR DE ICONOS
-  Círculo verde que contiene el icono de cada módulo
-*/
 .card-icon-container {
-  width: 100px;                     /* Tamaño del contenedor del icono */
+  width: 100px;
   height: 100px;
-  border-radius: 16px;              /* Bordes redondeados */
+  border-radius: 16px;
   display: flex;
   align-items: center;
   justify-content: center;
-  margin-bottom: 2rem;              /* Espacio debajo del icono */
-  background: #1a7431;              /* Fondo verde */
-  transition: all 0.3s ease;        /* Transición para efectos hover */
+  background: #1a7431;
+  transition: all 0.3s ease;
+  flex-shrink: 0;
 }
 
-/* Efecto hover en el contenedor del icono */
 .card-icon-container:hover {
-  transform: scale(1.05);           /* Ligero agrandamiento al hover */
+  transform: scale(1.05);
 }
 
-/* Iconos dentro de los contenedores */
 .card-icon {
-  font-size: 3rem;                  /* Tamaño grande para buena visibilidad */
+  font-size: 3rem;
   color: white;
 }
 
-/* 
-  ÁREA DE TEXTO DE LAS TARJETAS
-  Contiene el título y descripción de cada módulo
-*/
 .card-text {
   flex: 1;
   display: flex;
   flex-direction: column;
   justify-content: center;
   width: 100%;
+  min-height: 150px;
+  gap: 1rem;
 }
 
 .card-text h3 {
   font-weight: 600;
-  margin-bottom: 1rem;              /* Espacio entre título y descripción */
-  font-size: 1.4rem;                /* Tamaño de fuente legible */
-  color: var(--dark-gray);          /* Color oscuro para buen contraste */
+  margin: 0;
+  font-size: 1.4rem;
+  color: var(--dark-gray);
   line-height: 1.3;
 }
 
 .card-text p {
-  color: var(--text-gray);          /* Gris para texto descriptivo */
-  font-size: 1rem;                  /* Tamaño comfortable para lectura */
-  line-height: 1.5;                 /* Interlineado adecuado */
+  color: var(--text-gray);
+  font-size: 1rem;
+  line-height: 1.5;
   margin: 0;
-  padding: 0 0.5rem;                /* Pequeño padding horizontal para texto */
+  padding: 0;
 }
 
-/* 
-===============================================
-VARIACIONES DE COLOR POR TARJETA
-===============================================
-Diferentes tonos de verde para distinguir cada módulo
-*/
-
-/* Tarjeta Conecta y Crea - Verde vibrante */
+/* VARIACIONES DE VERDE*/
 .connect-card .card-icon-container {
   background: #34a853;
 }
 
-/* Tarjeta Zona Swap - Verde principal (más destacado) */
 .swap-card .card-icon-container {
   background: #1a7431;
 }
 
-/* Tarjeta Explora - Verde intermedio */
 .explore-card .card-icon-container {
   background: #2e8b57;
 }
 
-/* 
-===============================================
-FOOTER INSTITUCIONAL
-===============================================
-Estilos para el pie de página con información oficial
-*/
+/*FOOTER COMPLETO CON COPYRIGHT INSTITUCIONAL*/
 .institutional-footer {
-  text-align: center;
-  padding: 2.5rem 2rem 1.5rem;      /* Espaciado interno generoso */
-  margin-top: auto;                 /* Empuja el footer hacia abajo */
-  max-width: 600px;
+  padding: 2rem 2rem 1rem 2rem;
+  margin-top: auto;
+  max-width: 800px;
   width: 100%;
-  border-top: 1px solid var(--medium-gray); /* Línea separadora sutil */
+  border-top: 1px solid var(--medium-gray);
+  background: var(--white);
+  border-radius: 12px 12px 0 0;
 }
 
-.institutional-footer p {
-  color: var(--text-gray);
+.footer-content {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 2rem;
+  text-align: center;
+}
+
+.footer-text {
+  flex: 1;
+  text-align: center;
+}
+
+/* TEXTOS DEL FOOTER*/
+.footer-description {
+  color: #000000 !important;
   font-size: 0.9rem;
   margin-bottom: 0.5rem;
   line-height: 1.4;
+  opacity: 1 !important;
 }
 
 .institutional-logo {
-  color: var(--primary-green);      /* Verde para el nombre de la plataforma */
+  color: #000000 !important;
   font-weight: 600;
   font-size: 1rem;
-  margin-top: 0.5rem;
+  margin-bottom: 0.5rem;
+  opacity: 1 !important;
 }
 
-/* 
-===============================================
-DISEÑO RESPONSIVE - MOBILE FIRST
-===============================================
-Ajustes para diferentes tamaños de pantalla
-*/
+.university-text {
+  color: #000000 !important;
+  font-weight: 500;
+  font-size: 0.9rem;
+  font-style: italic;
+  margin-bottom: 0.5rem;
+  opacity: 1 !important;
+}
 
-/* 
-  MÓVILES - Pantallas menores a 768px
-  Una sola columna para mejor usabilidad táctil
-*/
+/*
+   TEXTO DE COPYRIGHT */
+.copyright-text {
+  color: #000000 !important;
+  font-size: 0.8rem;
+  font-weight: 400;
+  margin-top: 1rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--medium-gray);
+  font-style: normal;
+  opacity: 1 !important;
+  text-align: center; 
+  display: block;
+  width: 100%;
+  margin-left: 120px;
+  margin-right: 120px;
+}
+
+/*DISEÑO RESPONSIVE */
+
+/* MÓVILES */
 @media (max-width: 768px) {
   .menu-grid {
-    grid-template-columns: 1fr;     /* Una sola columna */
+    grid-template-columns: 1fr;
     gap: 1.5rem;
     max-width: 500px;
-    padding: 0 1.5rem;              /* Espaciado lateral reducido */
+    padding: 0 1.5rem;
   }
   
   .menu-card {
-    height: 250px;                  /* Altura ligeramente menor en móvil */
-    min-height: 250px;
+    height: 320px;
+    min-height: 320px;
   }
   
   .welcome-section {
@@ -459,32 +387,79 @@ Ajustes para diferentes tamaños de pantalla
   }
   
   .card-content {
-    padding: 2rem 1.5rem;           /* Espaciado interno ajustado */
+    padding: 2rem 1.5rem;
+    gap: 1.2rem;
   }
   
   .card-icon-container {
     width: 90px;
     height: 90px;
-    margin-bottom: 1.5rem;
   }
   
   .card-icon {
     font-size: 2.5rem;
   }
   
+  .card-text {
+    min-height: 130px;
+    gap: 0.8rem;
+  }
+  
   .main-container {
-    padding: 1.5rem 0;              /* Espaciado vertical ajustado */
+    padding: 1.5rem 0 2.5rem 0;
   }
   
   .institutional-footer {
-    padding: 2rem 1.5rem 1rem;
+    padding: 1.5rem 1.5rem 0.5rem 1.5rem;
+    max-width: 500px;
+  }
+  
+  .footer-content {
+    flex-direction: column;
+    gap: 1.5rem;
+    text-align: center;
+  }
+  
+  .footer-text {
+    text-align: center;
+  }
+  
+  /* TEXTOS EN NEGRO PARA MÓVIL */
+  .footer-description,
+  .institutional-logo,
+  .university-text,
+  .copyright-text {
+    color: #000000 !important;
+    opacity: 1 !important;
+    text-align: center;
+  }
+  
+  .copyright-text {
+    font-size: 0.75rem;
+    margin-top: 0.8rem;
+    padding-top: 0.8rem;
+  }
+  
+  .university-logo {
+    padding: 0.6rem 1rem;
+  }
+  
+  .logo-symbol {
+    width: 35px;
+    height: 35px;
+    font-size: 0.9rem;
+  }
+  
+  .logo-title {
+    font-size: 0.75rem;
+  }
+  
+  .logo-subtitle {
+    font-size: 0.65rem;
   }
 }
 
-/* 
-  TABLETS - Pantallas entre 769px y 1024px
-  Tres columnas pero con espaciado ajustado
-*/
+/* TABLETS */
 @media (min-width: 769px) and (max-width: 1024px) {
   .menu-grid {
     grid-template-columns: repeat(3, 1fr);
@@ -494,12 +469,13 @@ Ajustes para diferentes tamaños de pantalla
   }
   
   .menu-card {
-    height: 260px;
-    min-height: 260px;
+    height: 350px;
+    min-height: 350px;
   }
   
   .card-content {
     padding: 2.2rem 1.5rem;
+    gap: 1.3rem;
   }
   
   .card-icon-container {
@@ -510,67 +486,105 @@ Ajustes para diferentes tamaños de pantalla
   .card-icon {
     font-size: 2.8rem;
   }
+  
+  .card-text {
+    min-height: 140px;
+  }
+  
+  .institutional-footer {
+    max-width: 700px;
+  }
 }
 
-/* 
-  DESKTOP GRANDE - Pantallas mayores a 1200px
-  Más espacio para aprovechar pantallas grandes
-*/
+/* DESKTOP GRANDE */
 @media (min-width: 1200px) {
   .menu-grid {
     max-width: 1100px;
-    gap: 2.5rem;                    /* Más espacio entre tarjetas */
+    gap: 2.5rem;
   }
   
   .menu-card {
-    height: 300px;                  /* Tarjetas aún más grandes */
-    min-height: 300px;
+    height: 400px;
+    min-height: 400px;
   }
   
   .card-content {
-    padding: 3rem 2rem;             /* Más espacio interno */
+    padding: 3rem 2rem;
+    gap: 2rem;
   }
   
   .card-icon-container {
     width: 110px;
     height: 110px;
-    margin-bottom: 2.5rem;
   }
   
   .card-icon {
-    font-size: 3.5rem;              /* Iconos más grandes */
+    font-size: 3.5rem;
+  }
+  
+  .card-text {
+    min-height: 160px;
+    gap: 1.2rem;
   }
   
   .card-text h3 {
-    font-size: 1.5rem;              /* Textos más grandes */
+    font-size: 1.5rem;
   }
   
   .card-text p {
     font-size: 1.1rem;
   }
+  
+  .institutional-footer {
+    max-width: 900px;
+  }
 }
 
-/* 
-  ACCESIBILIDAD - Soporte para preferencias de movimiento reducido
-  Para usuarios que prefieren menos animaciones
-*/
+/*GARANTIZAR SCROLL*/
+@media (max-height: 800px) {
+  .main-container {
+    min-height: 120vh;
+  }
+  
+  .menu-card {
+    height: 360px;
+    min-height: 360px;
+  }
+}
+
+@media (max-height: 600px) {
+  .main-container {
+    min-height: 140vh;
+  }
+  
+  .menu-card {
+    height: 340px;
+    min-height: 340px;
+  }
+  
+  .welcome-section {
+    margin: 0 0 1.5rem 0;
+  }
+}
+
+/* Accesibilidad */
 @media (prefers-reduced-motion: reduce) {
   .menu-card,
   .card-icon-container {
-    transition: none;               /* Elimina transiciones */
+    transition: none;
   }
   
   .menu-card:hover {
-    transform: none;                /* Elimina efectos de hover */
+    transform: none;
   }
 }
 
-/* 
-  ENFOQUE VISIBLE - Mejora accesibilidad para navegación con teclado
-  Cuando un usuario navega con TAB, se ve claramente qué elemento está seleccionado
-*/
 .menu-card:focus {
-  outline: 2px solid var(--accent-green); /* Borde verde visible */
-  outline-offset: 2px;              /* Separación del borde */
+  outline: 2px solid var(--accent-green);
+  outline-offset: 2px;
+}
+
+ion-content {
+  --overflow: auto;
 }
 </style>
