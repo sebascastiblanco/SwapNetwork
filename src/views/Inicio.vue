@@ -115,14 +115,13 @@ import { signInWithEmailAndPassword } from 'firebase/auth';
   padding: 10px 0 20px;           /*espacio del elemento*/
 }
 
-#boton {
+ion-item > #boton {
   --background: #7cc383;        /*color del boton*/
   color: black;                 /*color de letra*/
-  width: 25%;                     /*ancho del boton*/
+  width: 35%;                     /*ancho del boton*/
   height: 60%;                    /*altura del boton*/
-  margin-left: 37%;               /*margen del boton*/
-  margin-top: 30px;               /*margen superior del boton*/
-  position: relative;             /*posision boton*/
+  position: left;
+  margin-top: 5%;               /*margen superior del boton*/
   border-radius: 10px;            /*borde redondeado*/ 
   overflow: hidden;               /*recorta el borde sobresaliente*/
   font-family:'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;          /*tipo de letra para el contenido*/
@@ -131,8 +130,13 @@ import { signInWithEmailAndPassword } from 'firebase/auth';
 .enlace {
   text-align: center;         /*centra el contenido del formulario*/
   justify-content: center;          /*centra horizontalmente el contenido*/
+  padding-left: 15%;
   margin-left: 25%;         /*espacio izquierdo con el otro elemento*/
   padding-top: 10px;          /*espacio superior del elemento*/
+}
+
+  .enlace > ion-text {
+  padding-left: 8%;
 }
 
 @media (min-width: 500px) {
@@ -156,7 +160,12 @@ import { signInWithEmailAndPassword } from 'firebase/auth';
     text-align: center;
     justify-content: center;
     margin-left: 10%;
+    padding-left: 13%;
   }
+
+  .enlace > ion-text {
+  padding-left: 8%;
+}
 }
 
 </style>

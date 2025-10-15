@@ -122,9 +122,8 @@ function registro() {
   top: 0;
   right: 0;
   bottom: 0;
-  height: 100%;
+  height: 100vh;
   width: 50%;
-  object-fit: cover;
 }
 
 #registro {
@@ -134,6 +133,7 @@ function registro() {
   justify-content: center;      /*centra horizontalmente el contenido*/
   align-items: center;        /*centra verticalmente el contenido*/
   height: 100dvh;          /*fija la altura de la pantalla*/
+  overflow: hidden;
 }
 
 #subtitulo {
@@ -191,6 +191,10 @@ ion-item {
   padding-top: 10px;          /*espacio superior del elemento*/
 }
 
+.link > ion-text {
+  padding-left: 8%;
+}
+
 #ruta {
   padding: 5px;         /*espacio entre elementos*/
 }
@@ -203,13 +207,15 @@ ion-item {
   top: 0;
   right: 0;
   bottom: 0;
-  height: 43rem;
+  height: 100vh;
   width: 50%;
 }
 
  #registro {
     display: flex;
     flex-direction: column;
+    justify-content: center;
+    text-align: center;
     height: 100vh;
     overflow: hidden;
   }
@@ -224,10 +230,16 @@ ion-item {
   }
 
   .link {
+    flex-direction: row;
     text-align: center;
     justify-content: center;
     margin-left: 10%;
+    padding-left: 10%;
   }
+
+  .link > ion-text {
+  padding-left: 8%;
+}
 }
 
 </style>
