@@ -204,15 +204,15 @@
                       fill="solid" 
                       size="small" 
                       @click.stop="unirseTutoria(tutoria)"
-                      :disabled="estaUnido(tutoria)"
+                      :disabled="estaUnido(tutoria) || userRole === 'teacher'"
                       class="join-btn"
-                      :color="estaUnido(tutoria) ? 'success' : 'primary'"
+                      :color="(estaUnido(tutoria) || userRole === 'teacher') ? 'success' : 'primary'"
                     >
                       <ion-icon 
-                        :icon="estaUnido(tutoria) ? checkmarkCircle : addCircle" 
+                        :icon="(estaUnido(tutoria) || userRole === 'teacher') ? checkmarkCircle : addCircle" 
                         slot="start"
                       ></ion-icon>
-                      {{ estaUnido(tutoria) ? 'Unido' : 'Unirse' }}
+                      {{ estaUnido(tutoria) ? 'Unido' : (userRole === 'teacher' ? 'Tutor' : 'Unirse') }}
                     </ion-button>
                   </div>
                 </ion-card-content>
@@ -315,7 +315,7 @@
                       fill="solid" 
                       size="small" 
                       @click.stop="unirseGrupo(grupo)"
-                      :disabled="estaUnidoGrupo(grupo)"
+                      :disabled="estaUnidoGrupo(grupo) || userRole === 'teacher'"
                       class="join-btn"
                       :color="estaUnidoGrupo(grupo) ? 'success' : 'primary'"
                     >
@@ -351,7 +351,7 @@ import {
 } from 'ionicons/icons';
 
 // Importaciones de Firebase
-import { collection, onSnapshot, doc, updateDoc, arrayUnion } from "firebase/firestore";
+import { collection, onSnapshot, doc, updateDoc, arrayUnion, getDoc } from "firebase/firestore";
 import { db, auth } from "@/firebaseDB";
 import { onAuthStateChanged } from "firebase/auth";
 
@@ -360,6 +360,7 @@ const searchQuery = ref('');        // Texto de búsqueda
 const filterType = ref('all');      // Tipo de filtro activo
 const loading = ref(true);          // Estado de carga
 const usuario = ref(null);          // Usuario autenticado
+const userRole = ref('');           // Rol del usuario
 
 // DATOS REALES DESDE FIREBASE
 const tutorias = ref([]);           // Lista de tutorías
@@ -368,10 +369,17 @@ const grupos = ref([]);             // Lista de grupos de estudio
 // COMPUTED PROPERTIES PARA DATOS FILTRADOS Y CALCULADOS
 
 /**
- * Filtra las tutorías según el texto de búsqueda
+ * Filtra las tutorías según el texto de búsqueda y rol
  */
 const tutoriasFiltradas = computed(() => {
   let filtered = tutorias.value;
+
+  // Si es profesor, solo muestra las tutorías donde es el tutor
+  if (userRole.value === 'teacher' && usuario.value) {
+    filtered = filtered.filter(tutoria => 
+      tutoria.tutor && tutoria.tutor.toLowerCase().includes(usuario.value.email.toLowerCase())
+    );
+  }
 
   if (searchQuery.value) {
     const query = searchQuery.value.toLowerCase();
@@ -387,9 +395,14 @@ const tutoriasFiltradas = computed(() => {
 });
 
 /**
- * Filtra los grupos según el texto de búsqueda
+ * Filtra los grupos según el texto de búsqueda y rol
  */
 const gruposFiltrados = computed(() => {
+  // Si es profesor, no muestra ningún grupo
+  if (userRole.value === 'teacher') {
+    return [];
+  }
+
   let filtered = grupos.value;
 
   if (searchQuery.value) {
@@ -412,17 +425,29 @@ const actividadesHoyCount = computed(() => {
   const hoy = new Date();
   hoy.setHours(0, 0, 0, 0);
   
-  const tutoriasHoy = tutorias.value.filter(tutoria => {
+  let tutoriasHoy = tutorias.value.filter(tutoria => {
     if (!tutoria.timespacep) return false;
     const fechaTutoria = tutoria.timespacep.toDate ? tutoria.timespacep.toDate() : new Date(tutoria.timespacep);
     return fechaTutoria.toDateString() === hoy.toDateString();
   });
 
-  const gruposHoy = grupos.value.filter(grupo => {
+  // Si es profesor, filtrar solo sus tutorías
+  if (userRole.value === 'teacher' && usuario.value) {
+    tutoriasHoy = tutoriasHoy.filter(tutoria => 
+      tutoria.tutor && tutoria.tutor.toLowerCase().includes(usuario.value.email.toLowerCase())
+    );
+  }
+
+  let gruposHoy = grupos.value.filter(grupo => {
     if (!grupo.timespacep) return false;
     const fechaGrupo = grupo.timespacep.toDate ? grupo.timespacep.toDate() : new Date(grupo.timespacep);
     return fechaGrupo.toDateString() === hoy.toDateString();
   });
+
+  // Profesores no ven grupos
+  if (userRole.value === 'teacher') {
+    gruposHoy = [];
+  }
 
   return tutoriasHoy.length + gruposHoy.length;
 });
@@ -530,6 +555,23 @@ const cargarGrupos = () => {
 };
 
 /**
+ * Obtiene el rol del usuario desde Firebase
+ */
+const obtenerRolUsuario = async (uid) => {
+  try {
+    const userDoc = await getDoc(doc(db, "users", uid));
+    if (userDoc.exists()) {
+      userRole.value = userDoc.data().role || 'student';
+    } else {
+      userRole.value = 'student';
+    }
+  } catch (error) {
+    console.error("Error obteniendo rol:", error);
+    userRole.value = 'student';
+  }
+};
+
+/**
  * Permite al usuario unirse a una tutoría
  */
 const unirseTutoria = async (tutoria) => {
@@ -538,6 +580,18 @@ const unirseTutoria = async (tutoria) => {
     if (!usuario.value) {
       const toast = await toastController.create({
         message: "Debes iniciar sesión para unirte a una tutoría",
+        duration: 3000,
+        color: 'warning',
+        position: 'top'
+      });
+      await toast.present();
+      return;
+    }
+
+    // Verificar si es profesor
+    if (userRole.value === 'teacher') {
+      const toast = await toastController.create({
+        message: "Los profesores no pueden unirse como participantes",
         duration: 3000,
         color: 'warning',
         position: 'top'
@@ -598,6 +652,18 @@ const unirseGrupo = async (grupo) => {
     if (!usuario.value) {
       const toast = await toastController.create({
         message: "Debes iniciar sesión para unirte a un grupo",
+        duration: 3000,
+        color: 'warning',
+        position: 'top'
+      });
+      await toast.present();
+      return;
+    }
+
+    // Verificar si es profesor
+    if (userRole.value === 'teacher') {
+      const toast = await toastController.create({
+        message: "Los profesores no pueden unirse a grupos de estudio",
         duration: 3000,
         color: 'warning',
         position: 'top'
@@ -693,6 +759,9 @@ onMounted(() => {
     usuario.value = user;
     if (user) {
       console.log("Usuario activo:", user.email);
+      obtenerRolUsuario(user.uid);
+    } else {
+      userRole.value = '';
     }
   });
 

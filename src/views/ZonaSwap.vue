@@ -2,66 +2,58 @@
   <ion-page>
     <ion-header>
       <ion-toolbar>
-        <ion-title><ion-icon :icon="arrowBackOutline" id="volver"></ion-icon>Visualizacion Gestor del Conocimiento</ion-title>
+        <ion-title>
+          <ion-icon :icon="arrowBackOutline" id="volver"></ion-icon>
+          Visualización Gestor del Conocimiento
+        </ion-title>
       </ion-toolbar>
     </ion-header>
 
     <ion-content id="zonaswap">
-
-      <!-- Creacion del formulario para aplicar filtros -->
       <ion-list>
 
-        <div id="archivos">
-          <ion-text class="texto">
-            Archivos
-          </ion-text>
-            <ion-icon :icon="folderOpenOutline" class="icon"></ion-icon>
+        <!-- Cuadro de Archivos -->
+        <div id="archivos" @click="irAArchivos">
+          <ion-text class="texto">Archivos</ion-text>
+          <ion-icon :icon="folderOpenOutline" class="icon"></ion-icon>
         </div>
+
+        <!-- Cuadro de Calificaciones -->
         <div id="calificaciones">
-          <ion-text>
-            Calificaciones
-          </ion-text>
+          <ion-text>Calificaciones</ion-text>
           <ion-icon :icon="checkmarkDoneOutline" class="icon2"></ion-icon>
-          
         </div>
+
+        <!-- Cuadro de Profes -->
         <div id="profes">
-          <ion-text>
-            Profes
-          </ion-text>
+          <ion-text>Profes</ion-text>
           <ion-icon :icon="languageOutline" class="icon"></ion-icon>
-          
         </div>
 
-          <!-- opciones a escoger -->
-
-          
-
-          <!-- opciones a escoger
-
-          <ion-item>
-            <ion-button>Buscar</ion-button>
-          </ion-item>
-           -->
       </ion-list>
     </ion-content>
   </ion-page>
 </template>
 
 <script setup>
-import {IonPage, IonTitle, IonHeader, IonToolbar, IonContent, IonList, IonItem, IonButton, IonText, IonIcon} from '@ionic/vue';
-import { folderOpenOutline } from 'ionicons/icons'
-import { arrowBackOutline, checkmarkDoneOutline, languageOutline } from 'ionicons/icons'
+import { IonPage, IonTitle, IonHeader, IonToolbar, IonContent, IonList, IonText, IonIcon } from '@ionic/vue'
+import { folderOpenOutline, arrowBackOutline, checkmarkDoneOutline, languageOutline } from 'ionicons/icons'
+import { useRouter } from 'vue-router'
 
+// Se importa el router para manejar la navegación
+const router = useRouter()
 
+// Función para redirigir al usuario a la página de Archivos
+function irAArchivos() {
+  router.push('/archivos')
+}
 </script>
 
 <style>
-
 #zonaswap {
   --background: #E3F2FD;
   height: 100%;
   width: auto;
-
 }
 
 #archivos {
@@ -72,11 +64,16 @@ import { arrowBackOutline, checkmarkDoneOutline, languageOutline } from 'ionicon
   margin: 50px;
   margin-bottom: 0;
   border-radius: 40px;
-  /*Texto y espacio central*/
   text-align: center;
   font-size: 30px;
   padding-top: 40px;
   padding-bottom: 10px;
+  cursor: pointer;
+  transition: transform 0.2s ease;
+}
+
+#archivos:hover {
+  transform: scale(1.05);
 }
 
 #volver {
@@ -101,7 +98,6 @@ import { arrowBackOutline, checkmarkDoneOutline, languageOutline } from 'ionicon
   width: 47%;
   margin: 50px;
   border-radius: 40px;
-  /*Texto y espacio central*/
   text-align: center;
   font-size: 30px;
   padding-top: 40px;
@@ -114,7 +110,6 @@ import { arrowBackOutline, checkmarkDoneOutline, languageOutline } from 'ionicon
   width: 42%;
   margin: 50px;
   border-radius: 40px;
-  /*Texto y espacio central*/
   text-align: center;
   font-size: 30px;
   padding-top: 40px;
@@ -130,7 +125,6 @@ import { arrowBackOutline, checkmarkDoneOutline, languageOutline } from 'ionicon
 }
 
 @media (min-width: 500px) {
-  
   #archivos {
     display: inline-block;
     width: 40%;
@@ -149,5 +143,4 @@ import { arrowBackOutline, checkmarkDoneOutline, languageOutline } from 'ionicon
     padding-top: 35%;
   }
 }
-
 </style>
