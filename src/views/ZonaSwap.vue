@@ -1,15 +1,15 @@
 <template>
   <ion-page>
     <ion-header>
-      <ion-toolbar>
+      <ion-toolbar color="success">
         <ion-title>
-          <ion-icon :icon="arrowBackOutline" id="volver"></ion-icon>
-          Visualización Gestor del Conocimiento
+          <ion-button fill="clear" @click="volver"><ion-icon :icon="arrowBackOutline" id="volver"></ion-icon></ion-button>
+            ZonaSwap
         </ion-title>
       </ion-toolbar>
     </ion-header>
 
-    <ion-content id="zonaswap">
+    <ion-content id="zonaswap" :fullscreen="true">
       <ion-list>
 
         <!-- Cuadro de Archivos -->
@@ -19,14 +19,14 @@
         </div>
 
         <!-- Cuadro de Calificaciones -->
-        <div id="calificaciones">
-          <ion-text>Calificaciones</ion-text>
+        <div id="calificaciones" @click="irACalificaciones">
+          <ion-text class="texto">Calificaciones</ion-text>
           <ion-icon :icon="checkmarkDoneOutline" class="icon2"></ion-icon>
         </div>
 
         <!-- Cuadro de Profes -->
-        <div id="profes">
-          <ion-text>Profes</ion-text>
+        <div id="profes"  @click="irAProfes">
+          <ion-text class="texto">Profes</ion-text>
           <ion-icon :icon="languageOutline" class="icon"></ion-icon>
         </div>
 
@@ -36,31 +36,47 @@
 </template>
 
 <script setup>
-import { IonPage, IonTitle, IonHeader, IonToolbar, IonContent, IonList, IonText, IonIcon } from '@ionic/vue'
+import { IonPage, IonTitle, IonHeader, IonToolbar, IonContent, IonList, IonText, IonIcon, IonButton } from '@ionic/vue'
 import { folderOpenOutline, arrowBackOutline, checkmarkDoneOutline, languageOutline } from 'ionicons/icons'
 import { useRouter } from 'vue-router'
 
 // Se importa el router para manejar la navegación
 const router = useRouter()
 
-// Función para redirigir al usuario a la página de Archivos
+// Función para redirigir al usuario a las secciones
 function irAArchivos() {
   router.push('/archivos')
 }
+
+function volver() {
+  router.push('/menuprincipal')
+}
+
+function irAProfes() {
+  router.push('/profes')
+}
+
+function irACalificaciones() {
+  router.push('/calificaciones')
+}
+
+//
 </script>
 
 <style>
+
 #zonaswap {
   --background: #E3F2FD;
   height: 100%;
   width: auto;
 }
 
+
 #archivos {
   display: inline-block;
   background: #2196F3;
   height: 360px;
-  width: 47%;
+  width: 50%;
   margin: 50px;
   margin-bottom: 0;
   border-radius: 40px;
@@ -68,7 +84,7 @@ function irAArchivos() {
   font-size: 30px;
   padding-top: 40px;
   padding-bottom: 10px;
-  cursor: pointer;
+  cursor: pointer;              /*Permite visualizar la opcion de boton*/
   transition: transform 0.2s ease;
 }
 
@@ -80,7 +96,11 @@ function irAArchivos() {
   display: inline-block;
   font-size: 20px;
   color: black;
-  padding-right: 20px;
+  padding-right: 1rem;
+}
+
+#volver:hover {
+  transform: scale(1.05);
 }
 
 .icon {
@@ -95,12 +115,18 @@ function irAArchivos() {
   display: inline-block;
   background: #26A69A;
   height: 360px;
-  width: 47%;
+  width: 50%;
   margin: 50px;
   border-radius: 40px;
   text-align: center;
   font-size: 30px;
   padding-top: 40px;
+  cursor: pointer;
+  transition: transform 0.2s ease;        /*Permite el crecimiento leve del boton*/
+}
+
+#profes:hover {
+  transform: scale(1.05);
 }
 
 #calificaciones {
@@ -113,6 +139,12 @@ function irAArchivos() {
   text-align: center;
   font-size: 30px;
   padding-top: 40px;
+  cursor: pointer;
+  transition: transform 0.2s ease;
+}
+
+#calificaciones:hover {
+  transform: scale(1.05);
 }
 
 .icon2 {

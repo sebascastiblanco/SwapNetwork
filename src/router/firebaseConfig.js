@@ -2,7 +2,7 @@
 import { initializeApp } from "firebase/app";
 import { getAnalytics } from "firebase/analytics";
 import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
-import { getFirestore, doc, setDoc } from "firebase/firestore";
+import { getFirestore, doc, setDoc, collection, addDoc, query, where, getDocs } from "firebase/firestore";
 
 const firebaseConfig = {
   apiKey: "AIzaSyB3_o7aFMBQWZJUwSkWKtLNwAq3xJwB1fc",
@@ -37,6 +37,34 @@ const registerUser = async (usuario, correo, rol, contrasena) => {
         return userCredential;
     } catch (error) {
         alert("Error al registrar usuario:" + error.message || error.code);
+    }
+}
+
+//Funcion registrar calificacion
+export const createCalificaciones = async (datos) => {
+    const docRef = await addDoc(collection(basedatos, "calificaciones"), datos)
+    return docRef.id
+}
+
+export const calificacion = async (comentario, docente, valoracion) => {
+    try {
+    const fecha_comentario = new Date().toISOString()
+
+    const resultado = await createCalificaciones({
+        comentario,
+        docente,
+        valoracion,
+        fecha_comentario
+    })
+
+    console.log('Calificacion guardada:', resultado)
+    alert('Calificación guardada exitosamente')
+    return resultado
+
+    } catch (error) {
+        console.error('Error al crear calificacion:', error)
+        alert(`Error al crear calificación: ${error.message}`)
+        throw error
     }
 }
 

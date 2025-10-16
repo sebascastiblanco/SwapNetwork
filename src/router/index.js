@@ -5,7 +5,9 @@ import ZonaSwap from '../views/ZonaSwap.vue'
 import MenuPrincipal from '../views/MenuPrincipal.vue'
 import ConectaYCrea from '../views/ConectaYCrea.vue'
 import Explora from '../views/Explora.vue'
-import Archivos from '../views/Archivos.vue' // 👈 NUEVA IMPORTACIÓN
+import Archivos from '../views/Archivos.vue'
+import Profes from '../views/Profes.vue'
+import Calificaciones from '../views/Calificaciones.vue'
 
 const routes = [
   {
@@ -46,6 +48,16 @@ const routes = [
     path: '/archivos', //  NUEVA RUTA
     name: 'Archivos',
     component: Archivos
+  },
+  {
+    path: '/calificaciones',
+    name: 'Calificaciones',
+    component: Calificaciones
+  },
+  {
+    path: '/profes',
+    name: 'Profes',
+    component: Profes
   }
 ]
 
