@@ -60,7 +60,7 @@
             
         <ion-item>
             <ion-label>Busqueda por nombre maestro</ion-label>
-            <ion-input v-model="busqueda" placeholder="Ej: Sebastian..."/>
+            <ion-input v-model="busqueda" placeholder="Ejemplo: Sebastian..."/>
             <ion-button @click="buscar">Buscar</ion-button>
         </ion-item>
 
@@ -69,7 +69,8 @@
                 <ion-label>
                     <h2>{{  r.comentario }}</h2>
                     <p>{{ r.docente }}</p>
-                    <small>Publicado el {{ r.fecha }}</small>
+                    <p>{{ r.valoracion }}</p>
+                    <small>Publicado el {{ r.fecha_comentario }}</small>
                 </ion-label>
             </ion-item>
         </ion-list>
@@ -105,6 +106,7 @@ import { ref } from 'vue'
 import { arrowBackOutline } from 'ionicons/icons'
 import { calificacion } from '../router/firebaseConfig';
 import { collection, query, where, getDocs } from 'firebase/firestore'
+import { basedatos } from '../router/firebaseConfig';
 
 //Movimiento entre ventanas
 
@@ -129,16 +131,18 @@ import { collection, query, where, getDocs } from 'firebase/firestore'
  const guardar = async () => {
     await calificacion(comentario.value, docente.value, valoracion.value)
 
+    const fechaFormateada = new Date().toLocaleDateString('es-CO',{
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric'
+    });
+
     reseñas.value.push({
         comentario: comentario.value,
         docente: docente.value,
         valoracion: valoracion.value,
-        fecha: new Date().toLocaleDateString('es-CO', {
-            year: 'numeric',
-            month: 'long',
-            day: 'numeric'
-    })
-    })
+        fecha: fechaFormateada
+    });
 
     comentario.value = ''
     docente.value = ''
@@ -148,31 +152,43 @@ import { collection, query, where, getDocs } from 'firebase/firestore'
     reseñasFiltradas.value = reseñas.value
  }
 
- //buscar por nombre
+ //Buscar por Nombre
 const busqueda = ref('')
 const reseñasFiltradas = ref([])
 
 const buscar = async () => {
-    const nombre = busqueda.value.trim()
+    const docente = busqueda.value.trim()
 
-    if (!nombre) {
+    if (!docente) {
         reseñasFiltradas.value = []
         alert('Por favor escribe el nombre del docente')
         return
     }
 
     try {
-        const reseñasRef = collection(basedatos, 'reseñas')
-        const q = query(reseñasRef, where('docente', '==', nombre))
+        const reseñasRef = collection(basedatos, 'calificaciones')
+        const q = query(reseñasRef, where('docente', '==', docente))
         const querySnapshot = await getDocs(q)
 
-        reseñasFiltradas.value = querySnapshot.docs.map(doc => ({
-            id: doc.id,
-            ...doc.data()
-        }))
+        reseñasFiltradas.value = querySnapshot.docs.map(doc => {
+            const data = doc.data(); // Definir la variable 'data' fuera del retorno
+
+            const fechaFormateada = data.fecha ? data.fecha.toDate().toLocaleDateString('es-CO', {
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric' // Corregí un pequeño error tipográfico: 'numeirc' a 'numeric'
+            }) : '';
+
+            return {
+                id: doc.id,
+                ...doc.data(),
+                fecha: fechaFormateada
+            }
+
+        })
 
         if (reseñasFiltradas.value.length === 0) {
-            alert(`No se encontraron reseñas del docente "${nombre}`)
+            alert(`No se encontraron reseñas del docente "${docente}`)
         }
 
     } catch (error) {

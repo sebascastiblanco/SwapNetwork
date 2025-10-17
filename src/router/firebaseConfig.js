@@ -20,7 +20,7 @@ const analytics = getAnalytics(app);
 
 ///inicializar autenticacion
 const auth = getAuth(app);
-const basedatos = getFirestore(app);
+export const basedatos = getFirestore(app);
 
 //Funcion regitrar usuario
 const registerUser = async (usuario, correo, rol, contrasena) => {
