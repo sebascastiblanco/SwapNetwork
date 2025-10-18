@@ -72,9 +72,9 @@
             </div>
             <div class="university-logo-container">
               <div class="university-logo">
-                <div class="logo-symbol">UC</div>
+                <div class="logo-symbol"></div>
                 <div class="logo-text">
-                  <span class="logo-title">Universidad</span>
+                  <span class="logo-title"></span>
                   <span class="logo-subtitle">de Cundinamarca</span>
                 </div>
               </div>

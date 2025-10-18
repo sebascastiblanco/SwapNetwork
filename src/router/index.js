@@ -54,11 +54,13 @@ const routes = [
     name: 'Calificaciones',
     component: Calificaciones
   },
+
   {
-    path: '/profes',
-    name: 'Profes',
-    component: Profes
-  }
+  path: '/profes',
+  name: 'Profes',
+  component: Profes
+}
+
 ]
 
 const router = createRouter({

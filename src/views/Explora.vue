@@ -5,7 +5,7 @@
       <ion-toolbar class="custom-toolbar">
         <!-- Botón de regreso -->
         <ion-buttons slot="start">
-          <ion-back-button default-href="/" text="Atrás"></ion-back-button>
+          <ion-back-button default-href="/" text=""></ion-back-button>
         </ion-buttons>
         
         <!-- Título de la página -->
