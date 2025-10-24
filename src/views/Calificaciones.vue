@@ -176,7 +176,7 @@ const guardar = async () => {
     return
   }
 
-  await calificacion(comentario.value, docenteFinal, valoracion.value, materia.value)
+  await calificacion(comentario.value, docenteFinal, materia.value, valoracion.value)
 
   const fechaFormateada = new Date().toLocaleDateString('es-CO', {
     year: 'numeric',

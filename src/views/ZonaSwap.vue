@@ -76,8 +76,9 @@ function irACalificaciones() {
   display: inline-block;
   background: #2196F3;
   height: 360px;
-  width: 50%;
+  width: auto;
   margin: 50px;
+  margin-right: 1rem;
   margin-bottom: 0;
   border-radius: 40px;
   text-align: center;
@@ -115,8 +116,9 @@ function irACalificaciones() {
   display: inline-block;
   background: #26A69A;
   height: 360px;
-  width: 50%;
+  width: auto;
   margin: 50px;
+  margin-right: 1rem;
   border-radius: 40px;
   text-align: center;
   font-size: 30px;
@@ -133,8 +135,9 @@ function irACalificaciones() {
   float: right;
   background: #66BB6A;
   height: 770px;
-  width: 42%;
+  width: 45%;
   margin: 50px;
+  margin-left: 1rem;
   border-radius: 40px;
   text-align: center;
   font-size: 30px;

@@ -46,13 +46,14 @@ export const createCalificaciones = async (datos) => {
     return docRef.id
 }
 
-export const calificacion = async (comentario, docente, valoracion) => {
+export const calificacion = async (comentario, docente, materia, valoracion) => {
     try {
     const fecha_comentario = new Date().toISOString()
 
     const resultado = await createCalificaciones({
         comentario,
         docente,
+        materia,
         valoracion,
         fecha_comentario
     })
