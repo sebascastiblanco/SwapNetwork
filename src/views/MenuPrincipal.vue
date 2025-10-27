@@ -75,7 +75,7 @@
                 <div class="logo-symbol"></div>
                 <div class="logo-text">
                   <span class="logo-title"></span>
-                  <span class="logo-subtitle">de Cundinamarca</span>
+                  <span class="logo-subtitle"></span>
                 </div>
               </div>
             </div>

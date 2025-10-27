@@ -1,5 +1,5 @@
 {
-  "name": "SwapNetwork",
+  "name": "swapnetwork",
   "private": true,
   "version": "0.0.1",
   "type": "module",
@@ -47,5 +47,20 @@
   "overrides": {
     "rollup": "4.44.0"
   },
-  "description": "An Ionic project"
+  "description": "An Ionic project",
+  "main": "index.js",
+  "directories": {
+    "test": "tests"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/sebascastiblanco/SwapNetwork.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/sebascastiblanco/SwapNetwork/issues"
+  },
+  "homepage": "https://github.com/sebascastiblanco/SwapNetwork#readme"
 }

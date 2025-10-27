@@ -1,10 +1,12 @@
 <template>
   <ion-page>
     <ion-header>
-      <ion-toolbar color="success">
+      <ion-toolbar class="custom-toolbar">
         <ion-title>
-          <ion-button fill="clear" @click="volver"><ion-icon :icon="arrowBackOutline" id="volver"></ion-icon></ion-button>
+          <ion-buttons>
+          <ion-button class="regresar" fill="clear" @click="volver"><ion-icon :icon="arrowBackOutline" id="volver"></ion-icon></ion-button>
             ZonaSwap
+          </ion-buttons>
         </ion-title>
       </ion-toolbar>
     </ion-header>
@@ -36,7 +38,7 @@
 </template>
 
 <script setup>
-import { IonPage, IonTitle, IonHeader, IonToolbar, IonContent, IonList, IonText, IonIcon, IonButton } from '@ionic/vue'
+import { IonPage, IonTitle, IonHeader, IonToolbar, IonContent, IonList, IonText, IonIcon, IonButton, IonButtons } from '@ionic/vue'
 import { folderOpenOutline, arrowBackOutline, checkmarkDoneOutline, languageOutline } from 'ionicons/icons'
 import { useRouter } from 'vue-router'
 
@@ -64,6 +66,12 @@ function irACalificaciones() {
 </script>
 
 <style>
+
+.custom-toolbar {
+  --background: #1a7431;
+  --color: white;
+}
+
 
 #zonaswap {
   --background: #E3F2FD;
@@ -96,7 +104,7 @@ function irACalificaciones() {
 #volver {
   display: inline-block;
   font-size: 20px;
-  color: black;
+  color: white;
   padding-right: 1rem;
 }
 

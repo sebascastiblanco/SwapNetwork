@@ -1,12 +1,14 @@
 <template>
   <ion-page>
     <ion-header>
-      <ion-toolbar color="success">
+      <ion-toolbar class="custom-toolbar">
         <ion-title>
+          <ion-buttons>
           <ion-button fill="clear" @click="IrAZonaswap">
             <ion-icon :icon="arrowBackOutline" id="volver"></ion-icon>
           </ion-button>
-          Calificaciones y reseñas
+            Calificaciones y reseñas
+          </ion-buttons>
         </ion-title>
       </ion-toolbar>
     </ion-header>
@@ -176,9 +178,20 @@ const guardar = async () => {
     return
   }
 
-  await calificacion(comentario.value, docenteFinal, materia.value, valoracion.value)
 
-  const fechaFormateada = new Date().toLocaleDateString('es-CO', {
+  await calificacion(comentario.value, docenteFinal, materia.value, valoracion.value)
+  const fechaActual = new Date() // Fecha que se guardará en Firestore
+
+
+  await calificacion(
+    comentario.value,
+    docenteFinal,
+    valoracion.value,
+    materia.value,
+    fechaActual.toISOString() // Guardamos como string ISO
+  )
+
+  const fechaFormateada = fechaActual.toLocaleDateString('es-CO', {
     year: 'numeric',
     month: 'long',
     day: 'numeric'
@@ -189,7 +202,8 @@ const guardar = async () => {
     docente: docenteFinal,
     materia: materia.value,
     valoracion: valoracion.value,
-    fecha: fechaFormateada
+    fecha_comentario: fechaActual.toISOString(),
+    fecha: fechaFormateada // Para mostrar en pantalla
   })
 
   comentario.value = ''
@@ -219,13 +233,15 @@ const buscar = async () => {
 
     reseñasFiltradas.value = querySnapshot.docs.map(doc => {
       const data = doc.data()
-      const fechaFormateada = data.fecha
-        ? data.fecha.toDate().toLocaleDateString('es-CO', {
-            year: 'numeric',
-            month: 'long',
-            day: 'numeric'
-          })
-        : ''
+      let fechaFormateada = ''
+      if (data.fecha_comentario) {
+        const fechaObj = data.fecha_comentario.toDate ? data.fecha_comentario.toDate() : new Date(data.fecha_comentario)
+        fechaFormateada = fechaObj.toLocaleDateString('es-CO', {
+          year: 'numeric',
+          month: 'long',
+          day: 'numeric'
+        })
+      }
 
       return {
         id: doc.id,
@@ -246,13 +262,15 @@ const buscar = async () => {
 
 <style scoped>
 
+.custom-toolbar {
+  --background: #1a7431;
+  --color: white;
+}
+
+
 ion-title {
     display: flex;
     gap: 10px;
-}
-
-ion-button {
-  margin-top: 1%;
 }
 
 #cerrar {

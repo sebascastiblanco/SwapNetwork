@@ -222,6 +222,8 @@ const topProfes = computed(() => {
 </script>
 
 <style scoped>
+
+
 /* Estilos para las pestañas de navegación */
 .tabs {
   display:flex;
