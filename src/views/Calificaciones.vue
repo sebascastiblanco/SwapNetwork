@@ -169,9 +169,17 @@ const guardar = async () => {
     return
   }
 
-  await calificacion(comentario.value, docenteFinal, valoracion.value, materia.value)
+  const fechaActual = new Date() // Fecha que se guardará en Firestore
 
-  const fechaFormateada = new Date().toLocaleDateString('es-CO', {
+  await calificacion(
+    comentario.value,
+    docenteFinal,
+    valoracion.value,
+    materia.value,
+    fechaActual.toISOString() // Guardamos como string ISO
+  )
+
+  const fechaFormateada = fechaActual.toLocaleDateString('es-CO', {
     year: 'numeric',
     month: 'long',
     day: 'numeric'
@@ -182,7 +190,8 @@ const guardar = async () => {
     docente: docenteFinal,
     materia: materia.value,
     valoracion: valoracion.value,
-    fecha: fechaFormateada
+    fecha_comentario: fechaActual.toISOString(),
+    fecha: fechaFormateada // Para mostrar en pantalla
   })
 
   comentario.value = ''
@@ -212,13 +221,15 @@ const buscar = async () => {
 
     reseñasFiltradas.value = querySnapshot.docs.map(doc => {
       const data = doc.data()
-      const fechaFormateada = data.fecha
-        ? data.fecha.toDate().toLocaleDateString('es-CO', {
-            year: 'numeric',
-            month: 'long',
-            day: 'numeric'
-          })
-        : ''
+      let fechaFormateada = ''
+      if (data.fecha_comentario) {
+        const fechaObj = data.fecha_comentario.toDate ? data.fecha_comentario.toDate() : new Date(data.fecha_comentario)
+        fechaFormateada = fechaObj.toLocaleDateString('es-CO', {
+          year: 'numeric',
+          month: 'long',
+          day: 'numeric'
+        })
+      }
 
       return {
         id: doc.id,
