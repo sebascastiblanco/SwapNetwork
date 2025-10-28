@@ -12,7 +12,7 @@
     </ion-header>
 
     <ion-content id="zonaswap" :fullscreen="true">
-      <ion-list>
+      <ion-list id="contenido_zonaswap">
 
         <!-- Cuadro de Archivos -->
         <div id="archivos" @click="irAArchivos">
@@ -23,13 +23,13 @@
         <!-- Cuadro de Calificaciones -->
         <div id="calificaciones" @click="irACalificaciones">
           <ion-text class="texto">Calificaciones</ion-text>
-          <ion-icon :icon="checkmarkDoneOutline" class="icon2"></ion-icon>
+          <ion-icon :icon="ribbonOutline" class="icon"></ion-icon>
         </div>
 
         <!-- Cuadro de Profes -->
         <div id="profes"  @click="irAProfes">
           <ion-text class="texto">Profes</ion-text>
-          <ion-icon :icon="languageOutline" class="icon"></ion-icon>
+          <ion-icon :icon="schoolOutline" class="icon"></ion-icon>
         </div>
 
       </ion-list>
@@ -39,7 +39,7 @@
 
 <script setup>
 import { IonPage, IonTitle, IonHeader, IonToolbar, IonContent, IonList, IonText, IonIcon, IonButton, IonButtons } from '@ionic/vue'
-import { folderOpenOutline, arrowBackOutline, checkmarkDoneOutline, languageOutline } from 'ionicons/icons'
+import { folderOpenOutline, arrowBackOutline, ribbonOutline, schoolOutline } from 'ionicons/icons'
 import { useRouter } from 'vue-router'
 
 // Se importa el router para manejar la navegación
@@ -72,118 +72,92 @@ function irACalificaciones() {
   --color: white;
 }
 
-
 #zonaswap {
   --background: #E3F2FD;
+  width: 100%;
   height: 100%;
-  width: auto;
+  padding: 2rem;
+  box-sizing: border-box;
 }
 
+#contenido_zonaswap {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 2rem;            
+  flex-wrap: nowrap;    
+  width: 100%;
+  height: 100%;
+}
+
+#archivos,
+#profes,
+#calificaciones {
+  flex: 0 0 25%;
+  height: 500px;
+  border-radius: 30px;
+  color: white;
+  text-align: center;
+  font-size: 24px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center; 
+  align-items: center; 
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  cursor: pointer;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
 
 #archivos {
-  display: inline-block;
-  background: #2196F3;
-  height: 360px;
-  width: auto;
-  margin: 50px;
-  margin-right: 1rem;
-  margin-bottom: 0;
-  border-radius: 40px;
-  text-align: center;
-  font-size: 30px;
-  padding-top: 40px;
-  padding-bottom: 10px;
-  cursor: pointer;              /*Permite visualizar la opcion de boton*/
-  transition: transform 0.2s ease;
-}
-
-#archivos:hover {
-  transform: scale(1.05);
-}
-
-#volver {
-  display: inline-block;
-  font-size: 20px;
-  color: white;
-  padding-right: 1rem;
-}
-
-#volver:hover {
-  transform: scale(1.05);
-}
-
-.icon {
-  display: block;
-  font-size: 200px;
-  color: #ffffff;
-  margin: 20px;
-  padding-left: 36%;
-}
-
-#profes {
-  display: inline-block;
-  background: #26A69A;
-  height: 360px;
-  width: auto;
-  margin: 50px;
-  margin-right: 1rem;
-  border-radius: 40px;
-  text-align: center;
-  font-size: 30px;
-  padding-top: 40px;
-  cursor: pointer;
-  transition: transform 0.2s ease;        /*Permite el crecimiento leve del boton*/
-}
-
-#profes:hover {
-  transform: scale(1.05);
+  background: linear-gradient(135deg, #00C853, #64DD17);
 }
 
 #calificaciones {
-  float: right;
-  background: #66BB6A;
-  height: 770px;
-  width: 45%;
-  margin: 50px;
-  margin-left: 1rem;
-  border-radius: 40px;
-  text-align: center;
-  font-size: 30px;
-  padding-top: 40px;
-  cursor: pointer;
-  transition: transform 0.2s ease;
+  background: linear-gradient(135deg, #1DE9B6, #00BFA5);
 }
 
+#profes {
+  background: linear-gradient(135deg, #76FF03, #32CB00);
+}
+
+#archivos:hover,
+#profes:hover,
 #calificaciones:hover {
   transform: scale(1.05);
 }
 
+.texto {
+  font-weight: 600;
+  font-size: 28px;
+  margin: 0;
+  text-align: center;
+}
+
+.icon,
 .icon2 {
-  display: block;
-  font-size: 200px;
+  font-size: 140px;
   color: white;
-  margin: 20px;
-  padding-top: 20%;
-  padding-left: 35%;
+  margin-top: 15px; 
+  padding: 0;       
 }
 
-@media (min-width: 500px) {
-  #archivos {
-    display: inline-block;
-    width: 40%;
+@media (max-width: 900px) {
+  ion-list {
+    flex-direction: column;
+    align-items: center;
   }
 
-  #profes {
-    display: inline-block;
-    width: 40%;
+  #archivos,
+  #profes,
+  #calificaciones {
+    width: 90%;
+    height: 300px;
   }
 
-  .icon {
-    padding-left: 30%;
-  }
-
+  .icon,
   .icon2 {
-    padding-top: 35%;
+    font-size: 100px;
   }
 }
+
 </style>
