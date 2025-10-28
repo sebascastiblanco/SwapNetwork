@@ -404,6 +404,4 @@ ion-title {
   color: #444;
 }
 
-
-
 </style>
