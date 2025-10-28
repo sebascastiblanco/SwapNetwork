@@ -46,7 +46,23 @@
 
             <!-- Sistema de estrellas para la valoración -->
             <div class="top-stars">
-              <ion-icon v-for="n in 5" :key="n" :icon="n <= Math.round(p.promedio) ? star : starOutline" />
+              <span v-for="n in 5" :key="n" class="star-container">
+                <ion-icon 
+                  v-if="n <= Math.floor(p.promedio)" 
+                  :icon="star" 
+                  class="star-full"
+                />
+                <ion-icon 
+                  v-else-if="n === Math.ceil(p.promedio) && p.promedio % 1 >= 0.5" 
+                  :icon="starHalf" 
+                  class="star-half"
+                />
+                <ion-icon 
+                  v-else 
+                  :icon="starOutline" 
+                  class="star-empty"
+                />
+              </span>
               <span class="avg"> {{ p.promedio.toFixed(1) }}/5</span>
             </div>
 
@@ -69,7 +85,23 @@
                   <div class="row-name">{{ p.nombre }}</div>
                   <!-- Sistema de estrellas -->
                   <div class="row-stars">
-                    <ion-icon v-for="n in 5" :key="n" :icon="n <= Math.round(p.promedio) ? star : starOutline" />
+                    <span v-for="n in 5" :key="n" class="star-container">
+                      <ion-icon 
+                        v-if="n <= Math.floor(p.promedio)" 
+                        :icon="star" 
+                        class="star-full"
+                      />
+                      <ion-icon 
+                        v-else-if="n === Math.ceil(p.promedio) && p.promedio % 1 >= 0.5" 
+                        :icon="starHalf" 
+                        class="star-half"
+                      />
+                      <ion-icon 
+                        v-else 
+                        :icon="starOutline" 
+                        class="star-empty"
+                      />
+                    </span>
                     <span class="row-avg">{{ p.promedio.toFixed(1) }}/5</span>
                   </div>
                 </div>
@@ -105,7 +137,7 @@ import {
 } from '@ionic/vue'
 
 // Importaciones de iconos
-import { arrowBackOutline, star, starOutline, trophyOutline, peopleOutline } from 'ionicons/icons'
+import { arrowBackOutline, star, starHalf, starOutline, trophyOutline, peopleOutline } from 'ionicons/icons'
 
 // Importaciones de Vue y Firebase
 import { useRouter } from 'vue-router'
@@ -302,8 +334,19 @@ const topProfes = computed(() => {
 }
 .top1 .top-avatar { border:3px solid gold; }
 .top-name { color:#1b5e20; font-weight:700; margin:4px 0; font-size:1.1rem; }
-.top-stars { display:flex; justify-content:center; gap:5px; color:#f6c34a; align-items:center; }
-.top-stars .avg { margin-left:6px; color:#2e7d32; font-weight:600; font-size:0.95rem; }
+.top-stars { 
+  display:flex; 
+  justify-content:center; 
+  gap:2px; 
+  color:#f6c34a; 
+  align-items:center; 
+}
+.top-stars .avg { 
+  margin-left:6px; 
+  color:#2e7d32; 
+  font-weight:600; 
+  font-size:0.95rem; 
+}
 .top-porcentaje { color:#1b5e20; font-weight:600; margin-top:6px; }
 .top-comentario { color:#374151; font-style:italic; margin-top:8px; font-size:0.9rem; }
 
@@ -325,8 +368,18 @@ const topProfes = computed(() => {
 .row-main { flex:1; display:flex; flex-direction:column; gap:6px; }
 .row-top { display:flex; justify-content:space-between; align-items:center; gap:10px; }
 .row-name { font-weight:700; color:#1b5e20; }
-.row-stars { display:flex; align-items:center; gap:4px; color:#f6c34a; }
-.row-avg { margin-left:4px; color:#2e7d32; font-weight:600; font-size:0.9rem; }
+.row-stars { 
+  display:flex; 
+  align-items:center; 
+  gap:2px; 
+  color:#f6c34a; 
+}
+.row-avg { 
+  margin-left:4px; 
+  color:#2e7d32; 
+  font-weight:600; 
+  font-size:0.9rem; 
+}
 .row-bottom { display:flex; flex-direction:column; gap:2px; color:#374151; font-size:0.9rem; }
 .row-porcentaje { color:#1b5e20; font-weight:600; }
 .row-materia { font-style:italic; color:#2e7d32; }
@@ -366,8 +419,28 @@ ion-button {
   --color: white;
 }
 
+/* Estilos para el sistema de estrellas mejorado */
+.star-container {
+  position: relative;
+  display: inline-block;
+  width: 20px;
+  height: 20px;
+}
+
+.star-full,
+.star-half,
+.star-empty {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 20px;
+  height: 20px;
+}
+
 /* Responsive para pantallas pequeñas */
 @media (max-width:520px) {
   .top-grid { grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); }
+  .row-top { flex-direction: column; align-items: flex-start; gap: 4px; }
+  .row-stars { align-self: flex-start; }
 }
 </style>
