@@ -75,7 +75,7 @@
                 </div>
                 <div class="row-bottom">
                   <div class="row-porcentaje">{{ p.porcentaje }}% • {{ p.count }} reseña<span v-if="p.count!==1">s</span></div>
-                  <div class="row-materia" v-if="p.materia">Materia: {{ p.materia }}</div>
+                  <div class="row-materia" v-if="p.materia">Materia: {{p.materia}}</div>
                   <div class="row-comentario">"{{ p.comentario }}"</div>
                 </div>
               </div>
